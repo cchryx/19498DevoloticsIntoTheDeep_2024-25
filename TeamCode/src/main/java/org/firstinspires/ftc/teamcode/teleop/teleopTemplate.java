@@ -2,8 +2,8 @@ package org.firstinspires.ftc.teamcode.teleop;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
-import org.firstinspires.ftc.teamcode.util.HardwareInitializer;
-import org.firstinspires.ftc.teamcode.util.LightControl;
+import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
+import org.firstinspires.ftc.teamcode.components.LightControl;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
 @TeleOp(group = "Template", name = "Teleop Template")

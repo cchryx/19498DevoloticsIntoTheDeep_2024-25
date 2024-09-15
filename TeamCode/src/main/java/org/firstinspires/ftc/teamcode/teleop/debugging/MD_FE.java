@@ -6,9 +6,8 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.IMU;
 
-import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
-import org.firstinspires.ftc.teamcode.util.HardwareInitializer;
-import org.firstinspires.ftc.teamcode.util.MecanumDriveFE;
+import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
+import org.firstinspires.ftc.teamcode.components.MecanumDriveFE;
 
 @TeleOp(group = "Debugging", name = "MecanumDriveFE")
 public class MD_FE extends OpMode {

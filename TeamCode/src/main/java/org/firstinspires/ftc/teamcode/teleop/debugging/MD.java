@@ -4,8 +4,8 @@ import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-import org.firstinspires.ftc.teamcode.util.HardwareInitializer;
-import org.firstinspires.ftc.teamcode.util.MecanumDrive;
+import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
+import org.firstinspires.ftc.teamcode.components.MecanumDrive;
 
 
 @TeleOp(group = "Debugging", name = "MecanumDrive")
