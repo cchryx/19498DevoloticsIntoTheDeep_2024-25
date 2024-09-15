@@ -10,7 +10,7 @@ public class LightControl {
 
         if (color != null) {
             switch (color.toUpperCase()) {
-                case "RED":
+                case "REDw":
                     pattern = RevBlinkinLedDriver.BlinkinPattern.RED;
                     break;
                 case "GREEN":
