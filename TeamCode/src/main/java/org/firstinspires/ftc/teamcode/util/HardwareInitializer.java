@@ -13,9 +13,12 @@ public class HardwareInitializer {
 
     // Method to initialize all hardware components
     public void initHardware(HardwareMap hardwareMap) {
-        ledDrivers.put("L_Light", hardwareMap.get(RevBlinkinLedDriver.class, "L_Light"));
-//        motors.put("leftMotor", hardwareMap.get(DcMotor.class, "left_motor"));
-//        motors.put("rightMotor", hardwareMap.get(DcMotor.class, "right_motor"));
+//        ledDrivers.put("L_Light", hardwareMap.get(RevBlinkinLedDriver.class, "L_Light"));
+
+        motors.put("FR", hardwareMap.get(DcMotor.class, "FR"));
+        motors.put("FL", hardwareMap.get(DcMotor.class, "FL"));
+        motors.put("BR", hardwareMap.get(DcMotor.class, "BR"));
+        motors.put("BL", hardwareMap.get(DcMotor.class, "BL"));
     }
 
     // Getter for the LED lights by name
