@@ -19,16 +19,19 @@ public class MecanumDrive {
 
     // MecanumDrive_move method to handle movement
     public void MecanumDrive_move() {
+        // Set controller input
         double y = -gamepad1.left_stick_y;
         double x = -gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
+        // Calculate setting motor power
         double FR_power = rx + (-y - x) / denominator;
         double BR_power = rx + (-y + x) / denominator;
         double FL_power = rx + (y - x) / denominator;
         double BL_power = rx + (y + x) / denominator;
 
+        // Set motor powers
         FR.setPower(FR_power);
         BR.setPower(BR_power);
         FL.setPower(FL_power);

@@ -15,6 +15,7 @@ public class MD_FE extends OpMode {
     private HardwareInitializer hardwareInitializer;
     private MecanumDriveFE mecanumDrive;
 
+    // Initialize hardware
     DcMotor FR;
     DcMotor FL;
     DcMotor BR;
@@ -23,6 +24,7 @@ public class MD_FE extends OpMode {
 
     @Override
     public void init() {
+        // Initialize hardware
         hardwareInitializer = new HardwareInitializer();
         hardwareInitializer.initHardware(hardwareMap);
 
@@ -38,6 +40,7 @@ public class MD_FE extends OpMode {
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(parameters);
 
+        // Create a new MecanumDriveFE object
         mecanumDrive = new MecanumDriveFE(FR, FL, BR, BL, imu, gamepad1);
     }
 
@@ -47,6 +50,7 @@ public class MD_FE extends OpMode {
 
     @Override
     public void loop() {
+        // Call the move method to make the drivetrain move
         mecanumDrive.MecanumDrive_move();
         // Retrieve and display the heading on telemetry
         double heading = mecanumDrive.getHeading();

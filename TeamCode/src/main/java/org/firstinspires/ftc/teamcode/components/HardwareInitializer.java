@@ -19,6 +19,10 @@ public class HardwareInitializer {
         motors.put("FL", hardwareMap.get(DcMotor.class, "FL"));
         motors.put("BR", hardwareMap.get(DcMotor.class, "BR"));
         motors.put("BL", hardwareMap.get(DcMotor.class, "BL"));
+
+        motors.put("SLIDESF", hardwareMap.get(DcMotor.class, "SLIDESF"));
+        motors.put("SLIDESB", hardwareMap.get(DcMotor.class, "SLIDESB"));
+
     }
 
     // Getter for the LED lights by name
