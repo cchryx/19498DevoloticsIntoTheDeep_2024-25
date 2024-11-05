@@ -1,4 +1,4 @@
-package org.firstinspires.ftc.teamcode.teleop;
+package org.firstinspires.ftc.teamcode.teleop.debugging;
 
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
@@ -6,8 +6,8 @@ import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
 import org.firstinspires.ftc.teamcode.components.LightControl;
 import com.qualcomm.hardware.rev.RevBlinkinLedDriver;
 
-@TeleOp(group = "Template", name = "Teleop Template")
-public class teleopTemplate extends OpMode {
+@TeleOp(group = "Debugging", name = "Lighting")
+public class Lighting extends OpMode {
     private HardwareInitializer hardwareInitializer;
     private RevBlinkinLedDriver L_Light;
 
