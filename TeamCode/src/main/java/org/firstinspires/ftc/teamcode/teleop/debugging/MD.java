@@ -14,6 +14,7 @@ public class MD extends OpMode {
     private HardwareInitializer hardwareInitializer;
     private MecanumDrive mecanumDrive;
 
+    // Initialize hardware
     DcMotor FR;
     DcMotor FL;
     DcMotor BR;
@@ -21,6 +22,7 @@ public class MD extends OpMode {
 
     @Override
     public void init() {
+        // Initialize hardware
         hardwareInitializer = new HardwareInitializer();
         hardwareInitializer.initHardware(hardwareMap);
 
@@ -29,6 +31,7 @@ public class MD extends OpMode {
         BR = hardwareInitializer.getMotor("BR");
         BL = hardwareInitializer.getMotor("BL");
 
+        // Create a new MecanumDrive object
         mecanumDrive = new MecanumDrive(FR, FL, BR, BL, gamepad1);
     }
 
@@ -39,6 +42,7 @@ public class MD extends OpMode {
 
     @Override
     public void loop() {
+        // Call the move method to make the drivetrain move
         mecanumDrive.MecanumDrive_move();
     }
 }
