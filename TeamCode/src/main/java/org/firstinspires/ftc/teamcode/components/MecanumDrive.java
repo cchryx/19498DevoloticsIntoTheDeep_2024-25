@@ -5,8 +5,8 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 public class MecanumDrive {
 
-    private DcMotor FR, FL, BR, BL;
-    private Gamepad gamepad1;
+    public DcMotor FR, FL, BR, BL;
+    public Gamepad gamepad1;
 
     // Constructor to initialize the motors and gamepad
     public MecanumDrive(DcMotor FR, DcMotor FL, DcMotor BR, DcMotor BL, Gamepad gamepad1) {

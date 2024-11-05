@@ -43,7 +43,10 @@ public class LinearSlides {
     }
 
     public void moveSlides() {
-        // PID
+        /////////
+        // PID //
+        /////////
+
 //        slidesController.setPID(P, I, D); // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
         int averageRawCurrentPos = (SLIDES_F.getCurrentPosition() + SLIDES_B.getCurrentPosition()) / 2;
         slidesPostition = averageRawCurrentPos;
@@ -53,8 +56,9 @@ public class LinearSlides {
         SLIDES_F.setPower(motorPowerSlides);
         SLIDES_B.setPower(motorPowerSlides);
 
-
-        // CONTROLLER INPUTS
+        ///////////////////////
+        // CONTROLLER INPUTS //
+        ///////////////////////
 
         // Manual Positioning
         if (gamepad1.right_bumper) {

@@ -39,6 +39,7 @@ public class MD_FE extends OpMode {
                 RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
                 RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
         imu.initialize(parameters);
+        imu.resetYaw();
 
         // Create a new MecanumDriveFE object
         mecanumDrive = new MecanumDriveFE(FR, FL, BR, BL, imu, gamepad1);

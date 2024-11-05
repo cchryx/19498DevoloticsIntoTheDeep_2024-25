@@ -8,9 +8,9 @@ import org.firstinspires.ftc.robotcore.external.navigation.AngleUnit;
 
 public class MecanumDriveFE {
 
-    private DcMotor FR, FL, BR, BL;
-    private IMU imu;
-    private Gamepad gamepad1;
+    public DcMotor FR, FL, BR, BL;
+    public IMU imu;
+    public Gamepad gamepad1;
 
     // Constructor to initialize the motors and gamepad
     public MecanumDriveFE(DcMotor FR, DcMotor FL, DcMotor BR, DcMotor BL, IMU imu, Gamepad gamepad1) {
