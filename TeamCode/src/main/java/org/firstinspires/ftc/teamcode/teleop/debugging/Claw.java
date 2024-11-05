@@ -20,6 +20,7 @@ public class Claw extends OpMode {
 
     // Initialize hardware
     Servo ROTATE;
+    Servo PINCH;
     Servo WRIST_L;
     Servo WRIST_R;
 
@@ -35,10 +36,11 @@ public class Claw extends OpMode {
         hardwareInitializer.initHardware(hardwareMap);
 
         ROTATE = hardwareInitializer.getServo("ROTATE");
+        PINCH = hardwareInitializer.getServo("PINCH");
         WRIST_L = hardwareInitializer.getServo("WRISTL");
         WRIST_R = hardwareInitializer.getServo("WRISTR");
 
-        claw = new ClawControl(WRIST_L, WRIST_R, ROTATE, gamepad1);
+        claw = new ClawControl(WRIST_L, WRIST_R, ROTATE, PINCH, gamepad1);
     }
 
     @Override
@@ -47,5 +49,7 @@ public class Claw extends OpMode {
 
     @Override
     public void loop() {
+        claw.WRIST_L.setPosition(a);
+        claw.WRIST_R.setPosition(1-a+0.3);
     }
 }

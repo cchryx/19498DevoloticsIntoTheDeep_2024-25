@@ -1,23 +1,26 @@
 package org.firstinspires.ftc.teamcode.teleop.debugging;
 
 import com.acmerobotics.dashboard.FtcDashboard;
+import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
-import org.firstinspires.ftc.teamcode.components.LinearSlides;
+import org.firstinspires.ftc.teamcode.components.ArmControl;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@TeleOp(group = "Debugging", name = "LinearSlides")
-public class Slides extends OpMode {
+@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+@TeleOp(group = "Debugging", name = "Arm")
+public class Arm extends OpMode {
 
     private HardwareInitializer hardwareInitializer;
-    private LinearSlides linearSlides;
+    private ArmControl arm;
 
     // Initialize hardware
     DcMotor SLIDES_F;
     DcMotor SLIDES_B;
+    DcMotor ARM;
 
     @Override
     public void init() {
@@ -29,9 +32,10 @@ public class Slides extends OpMode {
 
         SLIDES_F = hardwareInitializer.getMotor("SLIDESF");
         SLIDES_B = hardwareInitializer.getMotor("SLIDESB");
+        ARM = hardwareInitializer.getMotor("ARM");
 
-        linearSlides = new LinearSlides(SLIDES_F, SLIDES_B, gamepad1);
-        linearSlides.initSlides();
+        arm = new ArmControl(SLIDES_F, SLIDES_B, ARM, gamepad1);
+        arm.initArm();
     }
 
     @Override
@@ -40,8 +44,10 @@ public class Slides extends OpMode {
 
     @Override
     public void loop() {
-        linearSlides.moveSlides();
-        telemetry.addData("slidesTarget", linearSlides.slidesTarget);
-        telemetry.addData("slidesPosition", linearSlides.slidesPostition);
+        arm.moveArm();
+        telemetry.addData("slidesTarget", arm.slidesTarget);
+        telemetry.addData("slidesPosition", arm.slidesPosition);
+        telemetry.addData("armTarget", arm.armTarget);
+        telemetry.addData("armPosition", arm.armPosition);
     }
 }

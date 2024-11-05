@@ -26,8 +26,10 @@ public class HardwareInitializer {
 
         motors.put("SLIDESF", hardwareMap.get(DcMotor.class, "SLIDESF"));
         motors.put("SLIDESB", hardwareMap.get(DcMotor.class, "SLIDESB"));
+        motors.put("ARM", hardwareMap.get(DcMotor.class, "ARM"));
 
         servos.put("ROTATE", hardwareMap.get(Servo.class, "ROTATE"));
+        servos.put("PINCH", hardwareMap.get(Servo.class, "PINCH"));
         servos.put("WRISTL", hardwareMap.get(Servo.class, "WRISTL"));
         servos.put("WRISTR", hardwareMap.get(Servo.class, "WRISTR"));
 
