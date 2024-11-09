@@ -120,17 +120,15 @@ public class ArmControl {
             if(armPosition + Values.ARM_INCR > Values.ARM_MAX) {
                 armTarget = Values.ARM_MAX;
             } else {
-                armTarget += Values.ARM_INCR * gamepad1.right_trigger;
+                armTarget += Values.ARM_INCR * gamepad2.right_trigger;
             }
         } else if (gamepad2.left_trigger > 0) {
             if(armPosition - Values.ARM_INCR < Values.ARM_MIN) {
                 armTarget = Values.ARM_MIN;
             } else {
-                armTarget -= Values.ARM_INCR * gamepad1.left_trigger;
+                armTarget -= Values.ARM_INCR * gamepad2.left_trigger;
             }
         }
-
-
 
     }
 

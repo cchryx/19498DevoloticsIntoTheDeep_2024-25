@@ -199,13 +199,6 @@ public class MainOpMode extends OpMode {
         pBasket = basket;
 
         telemetry.addData("AutoProcess", autoProcess);
-
-        telemetry.addData("FL", mecanumDrive.FL_power);
-        telemetry.addData("FR", mecanumDrive.FR_power);
-        telemetry.addData("BL", mecanumDrive.BL_power);
-        telemetry.addData("BR", mecanumDrive.BR_power);
-
-
         telemetry.addData("AutoStep", autoStep);
         double heading = mecanumDrive.getHeading();
         telemetry.addData("Heading (Degrees)", heading);

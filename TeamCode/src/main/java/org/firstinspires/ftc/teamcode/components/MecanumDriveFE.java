@@ -67,7 +67,7 @@ public class MecanumDriveFE {
         FL_power = rx + (rotY - rotX) / denominator;
         BL_power = rx + (rotY + rotX) / denominator;
 
-        if(gamepad2.b) {
+        if(gamepad1.right_trigger > 0) {
             FR_power *= Values.DT_SLOW_FACTOR;
             BR_power *= Values.DT_SLOW_FACTOR;
             FL_power *= Values.DT_SLOW_FACTOR;
