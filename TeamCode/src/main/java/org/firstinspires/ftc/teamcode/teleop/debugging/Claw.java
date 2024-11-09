@@ -8,6 +8,7 @@ import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.components.ClawControl;
 import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
+import org.firstinspires.ftc.teamcode.util.Values;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
@@ -24,9 +25,6 @@ public class Claw extends OpMode {
     Servo WRIST_L;
     Servo WRIST_R;
 
-    public static double a, b;
-
-
     @Override
     public void init() {
         telemetry = new MultipleTelemetry(telemetry, FtcDashboard.getInstance().getTelemetry());
@@ -40,7 +38,8 @@ public class Claw extends OpMode {
         WRIST_L = hardwareInitializer.getServo("WRISTL");
         WRIST_R = hardwareInitializer.getServo("WRISTR");
 
-        claw = new ClawControl(WRIST_L, WRIST_R, ROTATE, PINCH, gamepad1);
+        claw = new ClawControl(WRIST_L, WRIST_R, ROTATE, PINCH, gamepad1, gamepad2, telemetry);
+        claw.init();
     }
 
     @Override
@@ -49,7 +48,7 @@ public class Claw extends OpMode {
 
     @Override
     public void loop() {
-        claw.WRIST_L.setPosition(a);
-        claw.WRIST_R.setPosition(1-a+0.3);
+//        claw.move();
+        claw.telemetry();
     }
 }

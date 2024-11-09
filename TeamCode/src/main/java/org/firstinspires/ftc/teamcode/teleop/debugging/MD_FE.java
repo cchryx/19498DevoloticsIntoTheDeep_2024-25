@@ -42,7 +42,8 @@ public class MD_FE extends OpMode {
         imu.resetYaw();
 
         // Create a new MecanumDriveFE object
-        mecanumDrive = new MecanumDriveFE(FR, FL, BR, BL, imu, gamepad1);
+        mecanumDrive = new MecanumDriveFE(FR, FL, BR, BL, imu, gamepad1, gamepad2);
+        mecanumDrive.init();
     }
 
     @Override
@@ -52,7 +53,7 @@ public class MD_FE extends OpMode {
     @Override
     public void loop() {
         // Call the move method to make the drivetrain move
-        mecanumDrive.MecanumDrive_move();
+        mecanumDrive.move();
         // Retrieve and display the heading on telemetry
         double heading = mecanumDrive.getHeading();
         telemetry.addData("Heading (Degrees)", heading);

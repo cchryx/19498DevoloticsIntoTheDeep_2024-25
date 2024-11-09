@@ -33,16 +33,12 @@ public class MD extends OpMode {
 
         // Create a new MecanumDrive object
         mecanumDrive = new MecanumDrive(FR, FL, BR, BL, gamepad1);
-    }
-
-    @Override
-    public void init_loop() {
-
+        mecanumDrive.init();
     }
 
     @Override
     public void loop() {
         // Call the move method to make the drivetrain move
-        mecanumDrive.MecanumDrive_move();
+        mecanumDrive.move();
     }
 }

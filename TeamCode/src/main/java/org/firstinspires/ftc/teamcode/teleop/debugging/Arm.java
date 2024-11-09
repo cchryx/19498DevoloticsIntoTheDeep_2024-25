@@ -10,7 +10,6 @@ import org.firstinspires.ftc.teamcode.components.ArmControl;
 
 import com.qualcomm.robotcore.hardware.DcMotor;
 
-@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 @TeleOp(group = "Debugging", name = "Arm")
 public class Arm extends OpMode {
 
@@ -34,8 +33,8 @@ public class Arm extends OpMode {
         SLIDES_B = hardwareInitializer.getMotor("SLIDESB");
         ARM = hardwareInitializer.getMotor("ARM");
 
-        arm = new ArmControl(SLIDES_F, SLIDES_B, ARM, gamepad1);
-        arm.initArm();
+        arm = new ArmControl(SLIDES_F, SLIDES_B, ARM, gamepad1, gamepad2, telemetry);
+        arm.init();
     }
 
     @Override
@@ -44,10 +43,7 @@ public class Arm extends OpMode {
 
     @Override
     public void loop() {
-        arm.moveArm();
-        telemetry.addData("slidesTarget", arm.slidesTarget);
-        telemetry.addData("slidesPosition", arm.slidesPosition);
-        telemetry.addData("armTarget", arm.armTarget);
-        telemetry.addData("armPosition", arm.armPosition);
+        arm.move();
+        arm.telemetry();
     }
 }

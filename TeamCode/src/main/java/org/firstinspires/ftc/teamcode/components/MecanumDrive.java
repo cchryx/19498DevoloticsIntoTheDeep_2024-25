@@ -1,5 +1,7 @@
 package org.firstinspires.ftc.teamcode.components;
 
+import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
@@ -17,8 +19,15 @@ public class MecanumDrive {
         this.gamepad1 = gamepad1;
     }
 
+    public void init() {
+        FR.setZeroPowerBehavior(BRAKE);
+        FL.setZeroPowerBehavior(BRAKE);
+        BR.setZeroPowerBehavior(BRAKE);
+        BL.setZeroPowerBehavior(BRAKE);
+    }
+
     // MecanumDrive_move method to handle movement
-    public void MecanumDrive_move() {
+    public void move() {
         // Set controller input
         double y = -gamepad1.left_stick_y;
         double x = -gamepad1.left_stick_x;
