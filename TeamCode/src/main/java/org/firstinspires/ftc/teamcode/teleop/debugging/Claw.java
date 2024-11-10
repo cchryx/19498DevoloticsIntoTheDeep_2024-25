@@ -12,7 +12,6 @@ import org.firstinspires.ftc.teamcode.util.Values;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
-@Config
 @TeleOp(group = "Debugging", name = "Claw")
 public class Claw extends OpMode {
 

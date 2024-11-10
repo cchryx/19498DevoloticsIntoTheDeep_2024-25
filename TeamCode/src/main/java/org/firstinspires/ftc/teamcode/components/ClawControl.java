@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Values;
 
-//@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 public class ClawControl {
 
     public Servo WRIST_L, WRIST_R, ROTATE, PINCH;
@@ -20,7 +20,7 @@ public class ClawControl {
     public boolean clawClosed = false;
     public boolean clawHold = false;
 
-    public double wristTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static double wristTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public double rotateTarget = Values.ROTATE_INIT;
 
     // Constructor to initialize the motors and gamepad
@@ -67,6 +67,12 @@ public class ClawControl {
             } else {
                 rotateTarget -= Values.ROTATE_INCR;
             }
+        }
+
+        if (gamepad2.dpad_left && slidesPosition > 50) {
+            rotateTarget = Values.ROTATE_L_MAX;
+        } else if (gamepad2.dpad_right && slidesPosition > 50) {
+            rotateTarget = Values.ROTATE_R_MAX;
         }
 
 

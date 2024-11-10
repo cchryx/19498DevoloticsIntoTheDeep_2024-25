@@ -11,7 +11,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Values;
 
-//@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 public class ArmControl {
 
     private final double SLOWDOWN_FACTOR = 0.5;
@@ -20,13 +20,13 @@ public class ArmControl {
     Telemetry telemetry;
     public PIDController slidesController, armController;
     public double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public double aP = 0.023, aI = 0, aD = 0.001, aF = 0.02; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public double aP = 0.025, aI = 0, aD = 0.00089, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static   int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public int slidesPosition, armPosition = 0;
     public double motorPowerSlides, motorPowerArm;
     public double slidesPID, armPID;
 
-    public double minSpeed = -0.3;
+    public double minSpeed = -0.8;
 
     // Constructor to initialize the motors and gamepad
     public ArmControl(DcMotor SLIDES_F, DcMotor SLIDES_B, DcMotor ARM, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {

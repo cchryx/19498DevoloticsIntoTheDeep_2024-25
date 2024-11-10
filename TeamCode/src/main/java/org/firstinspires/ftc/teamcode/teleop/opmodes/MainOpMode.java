@@ -39,8 +39,12 @@ public class MainOpMode extends OpMode {
 
     private ElapsedTime autoTime = new ElapsedTime();
     private String autoProcess = "none";
-    private int autoStep = 0;
+    private int autoStep = 1;
     boolean pBasket = false;
+    boolean pHome = false;
+    boolean pRung = false;
+    boolean pSubmersible = false;
+    boolean pObservation = false;
 
     @Override
     public void init() {
@@ -92,21 +96,91 @@ public class MainOpMode extends OpMode {
 
         // Auto Stuff
         boolean basket = gamepad1.b;
-        if (basket && !pBasket && autoStep == 0) {
+        boolean home = gamepad1.ps;
+        boolean submersible = gamepad1.x;
+        boolean rung = gamepad1.y;
+        boolean observation = gamepad1.a;
+
+        if (observation && !pObservation && autoStep == 1) {
+            autoStep = 1;
+            autoProcess = "observation";
+        }
+
+        if (basket && !pBasket && autoStep == 1) {
             autoStep = 1;
             autoProcess = "basket";
+        }
+
+        if (submersible && !pSubmersible && autoStep == 1) {
+            autoStep = 1;
+            autoProcess = "submersible";
+        }
+
+        if (rung && !pRung && autoStep == 1) {
+            autoStep = 1;
+            autoProcess = "rung";
+        }
+
+        if (home && !pHome) {
+            autoStep = 1;
+            autoProcess = "home";
         }
 
         // Finite State Machine
         switch (autoProcess) {
             case "none":
+                claw.clawClosed = true;
                 break;
-            case "basket":
+            case "home":
                 switch (autoStep) {
                     case 1:
-                        if(basket && !pBasket && autoTime.milliseconds() > 100) {
-                            arm.minSpeed = -0.3;
+                        if(home && !pHome && autoTime.milliseconds() > 100) {
+                            arm.minSpeed = -0.8;
+                            claw.rotateTarget = Values.ROTATE_INIT;
+                            claw.wristTarget = Values.WRIST_HOME;
+                            claw.clawClosed = true;
+                            autoTime.reset();
+                            autoStep = 10001;
+                        }
+                        break;
+                    case 10001:
+                        if(autoTime.milliseconds() > 300) {
+                            if(arm.armPosition > 1150 && arm.slidesPosition > 400) {
+                                arm.armTarget = arm.armPosition - 70;
+                            } else if(arm.armPosition < 50) {
+                                arm.armTarget = arm.armPosition + 70;
+                            }
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 10002:
+                        if(autoTime.milliseconds() > 100) {
+                            arm.slidesTarget = Values.SLIDES_HOME;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                    case 10003:
+                        if(autoTime.milliseconds() > 500) {
+                            arm.minSpeed = -0.5;
+                            if(arm.armPosition < 500) {
+                                arm.minSpeed = 0.08;
+                            }
+                            arm.armTarget = 70;
+                            autoTime.reset();
+                            autoStep = 1;
+                            autoProcess = "none";
+                        }
+                        break;
+                }
+                break;
+            case "submersible":
+                switch (autoStep) {
+                    case 1:
+                        if(submersible && !pSubmersible && autoTime.milliseconds() > 100) {
+                            arm.minSpeed = -0.8;
                             claw.clawClosed = false;
+                            claw.wristTarget = Values.WRIST_HOME;
                             arm.armTarget = 70;
                             autoTime.reset();
                             autoStep = 10001;
@@ -120,83 +194,112 @@ public class MainOpMode extends OpMode {
                         }
                         break;
                     case 2:
-                        if(basket && !pBasket && autoTime.milliseconds() > 100) {
-                            arm.armTarget = 100;
+                        if(submersible && !pSubmersible && autoTime.milliseconds() > 100) {
+                            claw.clawClosed = true;
+                            claw.rotateTarget = Values.ROTATE_INIT;
                             autoTime.reset();
                             autoStep = 20001;
                         }
                         break;
                     case 20001:
-                        if (basket && !pBasket &&autoTime.milliseconds() > 100) {
-                            claw.clawClosed = true;
+                        if(autoTime.milliseconds() > 100) {
+                            arm.armTarget = 140;
                             autoTime.reset();
                             autoStep += 1;
                         }
                         break;
                     case 20002:
-                        if (arm.armPosition <= 400) {
-                            claw.rotateTarget = Values.ROTATE_INIT;
-                            arm.slidesTarget = Values.SLIDES_HOME;
+                        if(autoTime.milliseconds() > 200 && arm.armPosition > 100) {
                             autoTime.reset();
-                            autoStep = 3;
+                            autoStep = 10001;
+                            autoProcess = "home";
                         }
                         break;
-                    case 3:
+                }
+                break;
+            case "basket":
+                switch (autoStep) {
+                    case 1:
                         if(basket && !pBasket && autoTime.milliseconds() > 100) {
+                            arm.minSpeed = -0.6;
                             arm.armTarget = Values.ARM_HBASKET;
                             autoTime.reset();
                             autoStep += 1;
                         }
 
                         break;
-                    case 4:
+                    case 2:
                         if(basket && !pBasket && autoTime.milliseconds() > 100) {
                             arm.slidesTarget = Values.SLIDES_HBASKET;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 3:
+                        if(basket && !pBasket && autoTime.milliseconds() > 100) {
+                            claw.wristTarget = Values.WRIST_MAX;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 4:
+                        if(basket && !pBasket && autoTime.milliseconds() > 100) {
+                            claw.clawClosed = false;
                             autoTime.reset();
                             autoStep = 40001;
                         }
                         break;
                     case 40001:
-                        if(basket && !pBasket && autoTime.milliseconds() > 100) {
-                            claw.wristTarget = Values.WRIST_MAX;
-                            autoTime.reset();
-                            autoStep = 5;
-                        }
-                        break;
-                    case 5:
-                        if(basket && !pBasket && autoTime.milliseconds() > 100) {
-                            claw.clawClosed = false;
-                            autoTime.reset();
-                            autoStep = 50001;
-                        }
-                        break;
-                    case 50001:
-                        if(autoTime.milliseconds() > 100) {
+                        if(autoTime.milliseconds() > 300) {
+                            claw.rotateTarget = Values.ROTATE_INIT;
                             claw.wristTarget = Values.WRIST_HOME;
                             autoTime.reset();
-                            autoStep = 6;
-                        }
-                        break;
-                    case 6:
-                        if (basket && !pBasket && autoTime.milliseconds() > 100) {
-                            arm.slidesTarget = Values.SLIDES_HOME;
-                            autoTime.reset();
-                            autoStep += 1;
-                        }
-                        break;
-                    case 7:
-                        if (basket && !pBasket && autoTime.milliseconds() > 100) {
-                            arm.minSpeed = -0.03;
-                            arm.armTarget = Values.ARM_MIN;
-                            autoTime.reset();
-                            autoStep = 0;
+                            autoStep = 10001;
+                            autoProcess = "home";
                         }
                         break;
                 }
                 break;
+            case "rung":
+                switch (autoStep) {
+                    case 1:
+                        if(rung && !pRung && autoTime.milliseconds() > 100) {
+                            arm.armTarget = Values.ARM_HRUNG;
+                            claw.wristTarget = Values.WRIST_HRUNG;
+                            autoTime.reset();
+                            autoStep = 10001;
+                        }
+                        break;
+                    case 10001:
+                        if(autoTime.milliseconds() > 300) {
+                            arm.slidesTarget = Values.SLIDES_HRUNG;
+                            autoTime.reset();
+                            autoStep = 2;
+                        }
+                        break;
+                }
+                break;
+            case "observation":
+                switch (autoStep) {
+                    case 1:
+                        if (observation && !pObservation && autoTime.milliseconds() > 100) {
+                            claw.clawClosed = false;
+                            arm.armTarget = Values.ARM_WALL;
+                            claw.wristTarget = Values.WRIST_WALL;
+                            autoTime.reset();
+                            autoStep = 10001;
+                        }
+                        break;
+                }
+                break;
+
         }
 
         pBasket = basket;
+        pRung = rung;
+        pSubmersible = submersible;
+        pHome = home;
+        pObservation = observation;
 
         telemetry.addData("AutoProcess", autoProcess);
         telemetry.addData("AutoStep", autoStep);
