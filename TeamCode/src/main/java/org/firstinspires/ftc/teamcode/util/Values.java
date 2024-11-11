@@ -12,7 +12,8 @@ public class Values {
     public static int SLIDES_MAX_EXTEND = 790;
     public static int SLIDES_HOME = 0;
     public static int SLIDES_SUB = 350;
-    public static int SLIDES_HRUNG = 400;
+    public static int SLIDES_HRUNG = 150;
+    public static int SLIDES_HRUNG_S = 220;
     public static int SLIDES_HBASKET = 740;
     public static int SLIDES_WALL = 50;
     public static int SLIDES_INCR = 5;
@@ -22,7 +23,7 @@ public class Values {
     public static int ARM_MIN = 0;
     public static int ARM_INCR = 2;
     public static int ARM_HBASKET = 650;
-    public static int ARM_HRUNG = 240;
+    public static int ARM_HRUNG = 600;
     public static int ARM_WALL = 125;
 
     // CLAW VALUES
@@ -32,6 +33,7 @@ public class Values {
     public static double WRIST_OFFSET = 0.03;
     public static double WRIST_INCR = 0.01;
     public static double WRIST_HRUNG = 0.9;
+    public static double WRIST_HRUNG_S = 0.7;
     public static double WRIST_WALL = 0.5;
     public static double WRIST_WALL_UP = 0.65;
 

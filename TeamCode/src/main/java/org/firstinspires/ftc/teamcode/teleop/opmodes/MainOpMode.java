@@ -264,6 +264,7 @@ public class MainOpMode extends OpMode {
                 switch (autoStep) {
                     case 1:
                         if(rung && !pRung && autoTime.milliseconds() > 100) {
+                            arm.minSpeed = -0.6;
                             arm.armTarget = Values.ARM_HRUNG;
                             claw.wristTarget = Values.WRIST_HRUNG;
                             autoTime.reset();
@@ -271,13 +272,27 @@ public class MainOpMode extends OpMode {
                         }
                         break;
                     case 10001:
-                        if(autoTime.milliseconds() > 300) {
+                        if(autoTime.milliseconds() > 500) {
                             arm.slidesTarget = Values.SLIDES_HRUNG;
                             autoTime.reset();
                             autoStep = 2;
                         }
                         break;
                     case 2:
+                        if(rung && !pRung && autoTime.milliseconds() > 100) {
+                            arm.slidesTarget = Values.SLIDES_HRUNG_S;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 3:
+                        if(rung && !pRung && autoTime.milliseconds() > 100) {
+                            claw.wristTarget = Values.WRIST_HRUNG_S;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 4:
                         if(rung && !pRung && autoTime.milliseconds() > 100) {
                             claw.clawClosed = false;
                             claw.wristTarget = Values.WRIST_HOME;

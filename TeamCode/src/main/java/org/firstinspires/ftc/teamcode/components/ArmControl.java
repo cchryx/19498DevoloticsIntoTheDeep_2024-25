@@ -19,12 +19,17 @@ public class ArmControl {
     private Gamepad gamepad1, gamepad2;
     Telemetry telemetry;
     public PIDController slidesController, armController;
-    public static double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public static double aP = 0.025, aI = 0, aD = 0.00089, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public static int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public double aP = 0.026, aI = 0, aD = 0.00065, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static   int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public int slidesPosition, armPosition = 0;
     public double motorPowerSlides, motorPowerArm;
     public double slidesPID, armPID;
+
+    // True PID values
+    public double TaP = 0.026, TaI = 0, TaD = 0.00065, TaF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    // PID slopes
+    public double MaP = 0.00001, MaI = 0, MaD = -0.000001375, MaF = 0.000025; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
 
     public double minSpeed = -0.8;
 
@@ -58,13 +63,18 @@ public class ArmControl {
         ARM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         slidesController = new PIDController(sP, sI, sD);
-        armController = new PIDController(aP, aI, aD);
+        armController = new PIDController(TaP, TaI, TaD);
     }
 
     public void move() {
         //////////
         // PIDs //
         //////////
+
+        TaP = MaP * slidesPosition + aP;
+        TaI = MaI * slidesPosition + aI;
+        TaD = MaD * slidesPosition + aD;
+        TaF = MaF * slidesPosition + aF;
 
         // Slides
         slidesController.setPID(sP, sI, sD); // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
@@ -77,11 +87,11 @@ public class ArmControl {
         SLIDES_B.setPower(motorPowerSlides);
 
         // Arm
-        armController.setPID(aP, aI, aD); // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+        armController.setPID(TaP, TaI, TaD); // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
         int averageRawCurrentPos_a = ARM.getCurrentPosition();
         armPosition = averageRawCurrentPos_a;
         armPID = armController.calculate(armPosition, armTarget);
-        double aFeed = Math.cos(Math.toRadians((armTarget - 180) / Values.TICKS_PER_DEG_GOBUILDA)) * aF;
+        double aFeed = Math.cos(Math.toRadians((armTarget - 180) / Values.TICKS_PER_DEG_GOBUILDA)) * TaF;
         motorPowerArm = armPID + aFeed;
         motorPowerArm = Math.min(0.8, Math.max(minSpeed, motorPowerArm));
         ARM.setPower(motorPowerArm);
