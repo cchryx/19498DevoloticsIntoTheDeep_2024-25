@@ -203,13 +203,13 @@ public class MainOpMode extends OpMode {
                         break;
                     case 20001:
                         if(autoTime.milliseconds() > 100) {
-                            arm.armTarget = 140;
+                            arm.armTarget = 180;
                             autoTime.reset();
                             autoStep += 1;
                         }
                         break;
                     case 20002:
-                        if(autoTime.milliseconds() > 200 && arm.armPosition > 100) {
+                        if(autoTime.milliseconds() > 200) {
                             autoTime.reset();
                             autoStep = 10001;
                             autoProcess = "home";
@@ -277,6 +277,14 @@ public class MainOpMode extends OpMode {
                             autoStep = 2;
                         }
                         break;
+                    case 2:
+                        if(rung && !pRung && autoTime.milliseconds() > 100) {
+                            claw.clawClosed = false;
+                            claw.wristTarget = Values.WRIST_HOME;
+                            autoTime.reset();
+                            autoStep = 10001;
+                            autoProcess = "home";
+                        }
                 }
                 break;
             case "observation":
@@ -285,9 +293,46 @@ public class MainOpMode extends OpMode {
                         if (observation && !pObservation && autoTime.milliseconds() > 100) {
                             claw.clawClosed = false;
                             arm.armTarget = Values.ARM_WALL;
+                            arm.slidesTarget = Values.SLIDES_WALL;
                             claw.wristTarget = Values.WRIST_WALL;
                             autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 2:
+                        if (observation && !pObservation && autoTime.milliseconds() > 100) {
+                            claw.clawClosed = true;
+                            autoTime.reset();
+                            autoStep = 20001;
+                        }
+                        break;
+                    case 20001:
+                        if (autoTime.milliseconds() > 100) {
+                            claw.wristTarget = Values.WRIST_WALL_UP;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 20002:
+                        if (autoTime.milliseconds() > 100) {
+                            arm.armTarget = arm.armPosition + 100;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 20003:
+                        if (autoTime.milliseconds() > 200) {
+                            arm.slidesTarget = Values.SLIDES_HOME;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 20004:
+                        if (autoTime.milliseconds() > 300) {
+                            claw.wristTarget = Values.WRIST_HOME;
+                            autoTime.reset();
                             autoStep = 10001;
+                            autoProcess = "home";
                         }
                         break;
                 }

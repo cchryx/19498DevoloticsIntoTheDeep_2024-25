@@ -19,9 +19,9 @@ public class ArmControl {
     private Gamepad gamepad1, gamepad2;
     Telemetry telemetry;
     public PIDController slidesController, armController;
-    public double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public double aP = 0.025, aI = 0, aD = 0.00089, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public static   int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static double aP = 0.025, aI = 0, aD = 0.00089, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public int slidesPosition, armPosition = 0;
     public double motorPowerSlides, motorPowerArm;
     public double slidesPID, armPID;

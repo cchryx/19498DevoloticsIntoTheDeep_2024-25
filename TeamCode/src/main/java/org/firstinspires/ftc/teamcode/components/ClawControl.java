@@ -20,8 +20,8 @@ public class ClawControl {
     public boolean clawClosed = false;
     public boolean clawHold = false;
 
-    public static double wristTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public double rotateTarget = Values.ROTATE_INIT;
+    public static double wristTarget = 0, rotateTarget = Values.ROTATE_INIT; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public double wristPosition = 0;
 
     // Constructor to initialize the motors and gamepad
     public ClawControl(
@@ -69,10 +69,30 @@ public class ClawControl {
             }
         }
 
+        if (gamepad2.right_stick_y > 1 && slidesPosition > 50) {
+            double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
+            double newWristPos = WRIST_R.getPosition() + wristIncr;
+            if(newWristPos > Values.WRIST_MAX) {
+                wristTarget = Values.WRIST_MAX;
+            } else {
+                wristTarget += wristIncr;
+            }
+        } else if (gamepad2.right_stick_y > 1 && slidesPosition > 50) {
+            double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
+            double newWristPos = WRIST_R.getPosition() - wristIncr;
+            if(newWristPos < Values.WRIST_MIN) {
+                wristTarget = Values.WRIST_MIN;
+            } else {
+                wristTarget -= wristIncr;
+            }
+        }
+
         if (gamepad2.dpad_left && slidesPosition > 50) {
             rotateTarget = Values.ROTATE_L_MAX;
         } else if (gamepad2.dpad_right && slidesPosition > 50) {
             rotateTarget = Values.ROTATE_R_MAX;
+        } else if (gamepad2.dpad_up) {
+            rotateTarget = Values.ROTATE_INIT;
         }
 
 
@@ -97,7 +117,6 @@ public class ClawControl {
     }
 
     public void telemetry() {
-        telemetry.addData("Trigger", gamepad1.right_trigger);
-        telemetry.addData("target", wristTarget);
+        telemetry.addData("wristPosition", wristPosition);
     }
 }
