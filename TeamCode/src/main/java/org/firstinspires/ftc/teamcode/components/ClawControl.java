@@ -69,21 +69,21 @@ public class ClawControl {
             }
         }
 
-        if (gamepad2.right_stick_y > 1 && slidesPosition > 50) {
+        if (gamepad2.right_stick_y > 0 && slidesPosition > 50) {
             double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
-            double newWristPos = WRIST_R.getPosition() + wristIncr;
+            double newWristPos = wristPosition + wristIncr;
             if(newWristPos > Values.WRIST_MAX) {
                 wristTarget = Values.WRIST_MAX;
             } else {
-                wristTarget += wristIncr;
+                wristTarget = newWristPos;
             }
-        } else if (gamepad2.right_stick_y > 1 && slidesPosition > 50) {
+        } else if (gamepad2.right_stick_y < 0 && slidesPosition > 50) {
             double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
-            double newWristPos = WRIST_R.getPosition() - wristIncr;
+            double newWristPos = wristPosition + wristIncr;
             if(newWristPos < Values.WRIST_MIN) {
                 wristTarget = Values.WRIST_MIN;
             } else {
-                wristTarget -= wristIncr;
+                wristTarget = newWristPos;
             }
         }
 
@@ -110,9 +110,12 @@ public class ClawControl {
         } else{
             PINCH.setPosition(Values.PINCH_MIN);
         }
+
         WRIST_R.setPosition(wristTarget);
         WRIST_L.setPosition(wristTarget + Values.WRIST_OFFSET);
         ROTATE.setPosition(rotateTarget);
+
+        wristPosition = WRIST_R.getPosition();
 
     }
 

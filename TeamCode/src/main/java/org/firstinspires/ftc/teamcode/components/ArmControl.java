@@ -27,9 +27,9 @@ public class ArmControl {
     public double slidesPID, armPID;
 
     // True PID values
-    public double TaP = 0.026, TaI = 0, TaD = 0.00065, TaF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public double aP_T = 0.026, aI_T = 0, aD_T = 0.00065, aF_T = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     // PID slopes
-    public double MaP = 0.00001, MaI = 0, MaD = -0.000001375, MaF = 0.000025; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public double aP_M = 0.00001, aI_M = 0, aD_M = -0.000001375, aF_M = 0.000025; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
 
     public double minSpeed = -0.8;
 
@@ -63,7 +63,7 @@ public class ArmControl {
         ARM.setMode(DcMotor.RunMode.RUN_WITHOUT_ENCODER);
 
         slidesController = new PIDController(sP, sI, sD);
-        armController = new PIDController(TaP, TaI, TaD);
+        armController = new PIDController(aP_T, aI_T, aD_T);
     }
 
     public void move() {
@@ -71,10 +71,10 @@ public class ArmControl {
         // PIDs //
         //////////
 
-        TaP = MaP * slidesPosition + aP;
-        TaI = MaI * slidesPosition + aI;
-        TaD = MaD * slidesPosition + aD;
-        TaF = MaF * slidesPosition + aF;
+        aP_T = aP_M * slidesPosition + aP;
+        aI_T = aI_M * slidesPosition + aI;
+        aD_T = aD_M * slidesPosition + aD;
+        aF_T = aF_M * slidesPosition + aF;
 
         // Slides
         slidesController.setPID(sP, sI, sD); // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
@@ -87,11 +87,11 @@ public class ArmControl {
         SLIDES_B.setPower(motorPowerSlides);
 
         // Arm
-        armController.setPID(TaP, TaI, TaD); // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+        armController.setPID(aP_T, aI_T, aD_T); // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
         int averageRawCurrentPos_a = ARM.getCurrentPosition();
         armPosition = averageRawCurrentPos_a;
         armPID = armController.calculate(armPosition, armTarget);
-        double aFeed = Math.cos(Math.toRadians((armTarget - 180) / Values.TICKS_PER_DEG_GOBUILDA)) * TaF;
+        double aFeed = Math.cos(Math.toRadians((armTarget - 180) / Values.TICKS_PER_DEG_GOBUILDA)) * aF_T;
         motorPowerArm = armPID + aFeed;
         motorPowerArm = Math.min(0.8, Math.max(minSpeed, motorPowerArm));
         ARM.setPower(motorPowerArm);

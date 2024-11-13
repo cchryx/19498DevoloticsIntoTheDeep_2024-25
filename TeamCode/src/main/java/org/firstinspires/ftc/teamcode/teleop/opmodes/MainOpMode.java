@@ -203,7 +203,7 @@ public class MainOpMode extends OpMode {
                         break;
                     case 20001:
                         if(autoTime.milliseconds() > 100) {
-                            arm.armTarget = 180;
+                            claw.wristPosition = Values.WRIST_MAX;
                             autoTime.reset();
                             autoStep += 1;
                         }
@@ -211,7 +211,7 @@ public class MainOpMode extends OpMode {
                     case 20002:
                         if(autoTime.milliseconds() > 200) {
                             autoTime.reset();
-                            autoStep = 10001;
+                            autoStep = 1;
                             autoProcess = "home";
                         }
                         break;
@@ -254,7 +254,7 @@ public class MainOpMode extends OpMode {
                             claw.rotateTarget = Values.ROTATE_INIT;
                             claw.wristTarget = Values.WRIST_HOME;
                             autoTime.reset();
-                            autoStep = 10001;
+                            autoStep = 1;
                             autoProcess = "home";
                         }
                         break;
@@ -297,7 +297,7 @@ public class MainOpMode extends OpMode {
                             claw.clawClosed = false;
                             claw.wristTarget = Values.WRIST_HOME;
                             autoTime.reset();
-                            autoStep = 10001;
+                            autoStep = 1;
                             autoProcess = "home";
                         }
                 }
@@ -346,7 +346,7 @@ public class MainOpMode extends OpMode {
                         if (autoTime.milliseconds() > 300) {
                             claw.wristTarget = Values.WRIST_HOME;
                             autoTime.reset();
-                            autoStep = 10001;
+                            autoStep = 1;
                             autoProcess = "home";
                         }
                         break;
