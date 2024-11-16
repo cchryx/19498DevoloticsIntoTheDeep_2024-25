@@ -11,8 +11,8 @@ public class Values {
     // SLIDES VALUES
     public static int SLIDES_MAX_EXTEND = 790;
     public static int SLIDES_HOME = 0;
-    public static int SLIDES_SUB = 350;
-    public static int SLIDES_HRUNG = 150;
+    public static int SLIDES_SUB = 250;
+    public static int SLIDES_HRUNG = 140;
     public static int SLIDES_HRUNG_S = 220;
     public static int SLIDES_HBASKET = 740;
     public static int SLIDES_WALL = 50;
@@ -31,14 +31,14 @@ public class Values {
     public static double WRIST_MIN = 0;
     public static double WRIST_MAX = 0.96;
     public static double WRIST_OFFSET = 0.03;
-    public static double WRIST_INCR = 0.01;
+    public static double WRIST_INCR = -0.01;
     public static double WRIST_HRUNG = 0.9;
     public static double WRIST_HRUNG_S = 0.7;
     public static double WRIST_WALL = 0.5;
     public static double WRIST_WALL_UP = 0.65;
 
 
-    public static double ROTATE_INIT = 0.545; // 0 deg
+    public static double ROTATE_INIT = 0.53; // 0 deg
     public static double ROTATE_L_MAX = 0; // 90 deg
     public static double ROTATE_R_MAX = 1;
     public static double ROTATE_INCR = 0.0125;

@@ -42,7 +42,7 @@ public class MD_FE extends OpMode {
         imu.resetYaw();
 
         // Create a new MecanumDriveFE object
-        mecanumDrive = new MecanumDriveFE(FR, FL, BR, BL, imu, gamepad1, gamepad2);
+        mecanumDrive = new MecanumDriveFE(FR, FL, BR, BL, imu, gamepad1);
         mecanumDrive.init();
     }
 

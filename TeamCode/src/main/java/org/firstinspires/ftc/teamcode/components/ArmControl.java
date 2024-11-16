@@ -21,7 +21,7 @@ public class ArmControl {
     public PIDController slidesController, armController;
     public double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public double aP = 0.026, aI = 0, aD = 0.00065, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public static   int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public int slidesPosition, armPosition = 0;
     public double motorPowerSlides, motorPowerArm;
     public double slidesPID, armPID;
@@ -31,7 +31,8 @@ public class ArmControl {
     // PID slopes
     public double aP_M = 0.00001, aI_M = 0, aD_M = -0.000001375, aF_M = 0.000025; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
 
-    public double minSpeed = -0.8;
+    public double aMinSpeed = -0.8;
+    public double sMinSpeed = -1;
 
     // Constructor to initialize the motors and gamepad
     public ArmControl(DcMotor SLIDES_F, DcMotor SLIDES_B, DcMotor ARM, Gamepad gamepad1, Gamepad gamepad2, Telemetry telemetry) {
@@ -82,7 +83,7 @@ public class ArmControl {
         slidesPosition = averageRawCurrentPos_s;
         slidesPID = slidesController.calculate(slidesPosition, slidesTarget);
         motorPowerSlides = slidesPID + sF;
-        motorPowerSlides = Math.min(1, Math.max(-0.6, motorPowerSlides));
+        motorPowerSlides = Math.min(1, Math.max(sMinSpeed, motorPowerSlides));
         SLIDES_F.setPower(motorPowerSlides);
         SLIDES_B.setPower(motorPowerSlides);
 
@@ -93,7 +94,7 @@ public class ArmControl {
         armPID = armController.calculate(armPosition, armTarget);
         double aFeed = Math.cos(Math.toRadians((armTarget - 180) / Values.TICKS_PER_DEG_GOBUILDA)) * aF_T;
         motorPowerArm = armPID + aFeed;
-        motorPowerArm = Math.min(0.8, Math.max(minSpeed, motorPowerArm));
+        motorPowerArm = Math.min(0.8, Math.max(aMinSpeed, motorPowerArm));
         ARM.setPower(motorPowerArm);
 
         ///////////////////////

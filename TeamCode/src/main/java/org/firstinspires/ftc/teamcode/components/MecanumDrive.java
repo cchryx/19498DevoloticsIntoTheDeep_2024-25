@@ -5,6 +5,8 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
+import org.firstinspires.ftc.teamcode.util.Values;
+
 public class MecanumDrive {
 
     public DcMotor FR, FL, BR, BL;
@@ -30,7 +32,7 @@ public class MecanumDrive {
     public void move() {
         // Set controller input
         double y = -gamepad1.left_stick_y;
-        double x = -gamepad1.left_stick_x;
+        double x = gamepad1.left_stick_x;
         double rx = gamepad1.right_stick_x;
         double denominator = Math.max(Math.abs(y) + Math.abs(x) + Math.abs(rx), 1);
 
@@ -39,6 +41,13 @@ public class MecanumDrive {
         double BR_power = rx + (-y + x) / denominator;
         double FL_power = rx + (y - x) / denominator;
         double BL_power = rx + (y + x) / denominator;
+
+        if(gamepad1.right_trigger > 0) {
+            FR_power *= Values.DT_SLOW_FACTOR;
+            BR_power *= Values.DT_SLOW_FACTOR;
+            FL_power *= Values.DT_SLOW_FACTOR;
+            BL_power *= Values.DT_SLOW_FACTOR;
+        }
 
         // Set motor powers
         FR.setPower(FR_power);

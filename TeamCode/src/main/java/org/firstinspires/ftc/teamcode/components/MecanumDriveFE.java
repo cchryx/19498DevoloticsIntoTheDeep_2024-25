@@ -19,7 +19,7 @@ public class MecanumDriveFE {
 
 
     // Constructor to initialize the motors and gamepad
-    public MecanumDriveFE(DcMotor FR, DcMotor FL, DcMotor BR, DcMotor BL, IMU imu, Gamepad gamepad1, Gamepad gamepad2) {
+    public MecanumDriveFE(DcMotor FR, DcMotor FL, DcMotor BR, DcMotor BL, IMU imu, Gamepad gamepad1) {
         this.FR = FR;
         this.FL = FL;
         this.BR = BR;

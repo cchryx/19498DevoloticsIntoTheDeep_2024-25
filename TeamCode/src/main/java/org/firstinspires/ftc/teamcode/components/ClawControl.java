@@ -10,7 +10,7 @@ import com.qualcomm.robotcore.util.ElapsedTime;
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 import org.firstinspires.ftc.teamcode.util.Values;
 
-@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+//@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 public class ClawControl {
 
     public Servo WRIST_L, WRIST_R, ROTATE, PINCH;
@@ -18,9 +18,9 @@ public class ClawControl {
     public Telemetry telemetry;
 
     public boolean clawClosed = false;
-    public boolean clawHold = false;
+    public boolean pClaw = false;
 
-    public static double wristTarget = 0, rotateTarget = Values.ROTATE_INIT; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public double wristTarget = 0, rotateTarget = Values.ROTATE_INIT; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public double wristPosition = 0;
 
     // Constructor to initialize the motors and gamepad
@@ -54,22 +54,25 @@ public class ClawControl {
     }
 
     public void move(double slidesPosition) {
-        // Manual Positioning Rotate
-        if (gamepad2.right_bumper && slidesPosition > 50) {
-            if(ROTATE.getPosition() + Values.ROTATE_INCR > Values.ROTATE_R_MAX) {
+        if (gamepad2.left_stick_x > 0 && slidesPosition > 50) {
+            double rotateIncr = Values.ROTATE_INCR * gamepad2.left_stick_x;
+            double newRotatePos = ROTATE.getPosition() + rotateIncr;
+            if(newRotatePos > Values.ROTATE_R_MAX) {
                 rotateTarget = Values.ROTATE_R_MAX;
             } else {
-                rotateTarget += Values.ROTATE_INCR;
+                rotateTarget += rotateIncr;
             }
-        } else if (gamepad2.left_bumper && slidesPosition > 50) {
-            if(ROTATE.getPosition() - Values.ROTATE_INCR < Values.ROTATE_L_MAX) {
+        } else if (gamepad2.left_stick_x < 0 && slidesPosition > 50) {
+            double rotateIncr = Values.ROTATE_INCR * gamepad2.left_stick_x;
+            double newRotatePos = ROTATE.getPosition() + rotateIncr;
+            if(newRotatePos < Values.ROTATE_L_MAX) {
                 rotateTarget = Values.ROTATE_L_MAX;
             } else {
-                rotateTarget -= Values.ROTATE_INCR;
+                rotateTarget += rotateIncr;
             }
         }
 
-        if (gamepad2.right_stick_y > 0 && slidesPosition > 50) {
+        if (gamepad2.left_stick_y > 0 && slidesPosition > 50) {
             double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
             double newWristPos = wristPosition + wristIncr;
             if(newWristPos > Values.WRIST_MAX) {
@@ -77,7 +80,7 @@ public class ClawControl {
             } else {
                 wristTarget = newWristPos;
             }
-        } else if (gamepad2.right_stick_y < 0 && slidesPosition > 50) {
+        } else if (gamepad2.left_stick_y < 0 && slidesPosition > 50) {
             double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
             double newWristPos = wristPosition + wristIncr;
             if(newWristPos < Values.WRIST_MIN) {
@@ -95,15 +98,11 @@ public class ClawControl {
             rotateTarget = Values.ROTATE_INIT;
         }
 
-
-        if(gamepad2.x){
-            if (!clawHold) {
-                clawHold = true;
-                clawClosed = !clawClosed;
-            }
-        } else {
-            clawHold = false;
+        boolean claw = gamepad2.x;
+        if(!pClaw && claw) {
+            clawClosed = !clawClosed;
         }
+        pClaw = claw;
 
         if (!clawClosed){
             PINCH.setPosition(Values.PINCH_MAX);
@@ -121,5 +120,9 @@ public class ClawControl {
 
     public void telemetry() {
         telemetry.addData("wristPosition", wristPosition);
+        telemetry.addData("clawHold", pClaw);
+        telemetry.addData("clawClosed", clawClosed);
+
+
     }
 }
