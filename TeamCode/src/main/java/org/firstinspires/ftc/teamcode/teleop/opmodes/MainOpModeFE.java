@@ -216,7 +216,7 @@ public class MainOpModeFE extends OpMode {
                         }
                         break;
                     case 3:
-                        if(submersible && !pSubmersible && autoTime.milliseconds() > 100) {
+                        if(autoTime.milliseconds() > 1000) {
                             autoTime.reset();
                             autoStep = 1000101;
                             autoProcess = "home";

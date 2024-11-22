@@ -17,7 +17,7 @@ public class ClawControl {
     public Gamepad gamepad1, gamepad2;
     public Telemetry telemetry;
 
-    public boolean clawClosed = false;
+    public boolean clawClosed = true;
     public boolean pClaw = false;
 
     public double wristTarget = 0, rotateTarget = Values.ROTATE_INIT; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
@@ -47,8 +47,8 @@ public class ClawControl {
         // Set WRIST_L to reverse direction
         WRIST_R.setDirection(Servo.Direction.REVERSE);
 
-        WRIST_L.setPosition(Values.WRIST_HOME + Values.WRIST_OFFSET);
-        WRIST_R.setPosition(Values.WRIST_HOME);
+        WRIST_L.setPosition(Values.WRIST_MAX + Values.WRIST_OFFSET);
+        WRIST_R.setPosition(Values.WRIST_MAX);
         ROTATE.setPosition(Values.ROTATE_INIT);
         PINCH.setPosition(Values.PINCH_MIN);
     }
@@ -73,7 +73,7 @@ public class ClawControl {
         }
 
         if (gamepad2.left_stick_y > 0 && slidesPosition > 50) {
-            double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
+            double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
             double newWristPos = wristPosition + wristIncr;
             if(newWristPos > Values.WRIST_MAX) {
                 wristTarget = Values.WRIST_MAX;
@@ -81,7 +81,7 @@ public class ClawControl {
                 wristTarget = newWristPos;
             }
         } else if (gamepad2.left_stick_y < 0 && slidesPosition > 50) {
-            double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
+            double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
             double newWristPos = wristPosition + wristIncr;
             if(newWristPos < Values.WRIST_MIN) {
                 wristTarget = Values.WRIST_MIN;

@@ -31,7 +31,7 @@ public class Values {
     public static double WRIST_MIN = 0;
     public static double WRIST_MAX = 0.96;
     public static double WRIST_OFFSET = 0.03;
-    public static double WRIST_INCR = -0.01;
+    public static double WRIST_INCR = -0.03;
     public static double WRIST_HRUNG = 0.9;
     public static double WRIST_HRUNG_S = 0.7;
     public static double WRIST_WALL = 0.5;
@@ -41,7 +41,7 @@ public class Values {
     public static double ROTATE_INIT = 0.53; // 0 deg
     public static double ROTATE_L_MAX = 0; // 90 deg
     public static double ROTATE_R_MAX = 1;
-    public static double ROTATE_INCR = 0.0125;
+    public static double ROTATE_INCR = 0.03;
     public static double PINCH_MIN = 0; // Claw close
     public static double PINCH_MAX = 0.3; // Claw open
 }
