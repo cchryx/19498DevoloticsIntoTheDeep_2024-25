@@ -1,6 +1,4 @@
-package org.firstinspires.ftc.teamcode.util;
-
-import com.acmerobotics.dashboard.config.Config;
+package org.firstinspires.ftc.teamcode.components;
 
 public class Values {
 
@@ -21,7 +19,9 @@ public class Values {
     // ARM VALUES
     public static int ARM_MAX = 650;
     public static int ARM_MIN = 0;
+    public static int ARM_HOME = 70;
     public static int ARM_INCR = 2;
+    public static int ARM_SUB = 85;
     public static int ARM_HBASKET = 650;
     public static int ARM_HRUNG = 600;
     public static int ARM_WALL = 125;
@@ -29,6 +29,7 @@ public class Values {
     // CLAW VALUES
     public static double WRIST_HOME = 0.03;
     public static double WRIST_MIN = 0;
+    public static double WRIST_MED = 0.4;
     public static double WRIST_MAX = 0.96;
     public static double WRIST_OFFSET = 0.03;
     public static double WRIST_INCR = -0.03;
@@ -38,7 +39,7 @@ public class Values {
     public static double WRIST_WALL_UP = 0.65;
 
 
-    public static double ROTATE_INIT = 0.53; // 0 deg
+    public static double ROTATE_INIT = 0.5; // 0 deg
     public static double ROTATE_L_MAX = 0; // 90 deg
     public static double ROTATE_R_MAX = 1;
     public static double ROTATE_INCR = 0.03;

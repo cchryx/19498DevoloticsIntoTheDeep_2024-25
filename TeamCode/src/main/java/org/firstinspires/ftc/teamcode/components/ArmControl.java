@@ -1,15 +1,13 @@
 package org.firstinspires.ftc.teamcode.components;
 
 import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
+
 import com.acmerobotics.dashboard.config.Config;
 import com.arcrobotics.ftclib.controller.PIDController;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.DcMotorSimple;
 import com.qualcomm.robotcore.hardware.Gamepad;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.util.Values;
 
 @Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 public class ArmControl {
@@ -21,8 +19,8 @@ public class ArmControl {
     public PIDController slidesController, armController;
     public double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public double aP = 0.026, aI = 0, aD = 0.00065, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public int slidesTarget, armTarget = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public int slidesPosition, armPosition = 0;
+    public int slidesTarget = 0, armTarget = Values.ARM_HOME; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public int slidesPosition = 0, armPosition = Values.ARM_HOME;
     public double motorPowerSlides, motorPowerArm;
     public double slidesPID, armPID;
 

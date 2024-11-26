@@ -2,11 +2,9 @@ package org.firstinspires.ftc.teamcode.teleop.opmodes;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
@@ -14,8 +12,7 @@ import org.firstinspires.ftc.teamcode.components.ArmControl;
 import org.firstinspires.ftc.teamcode.components.ClawControl;
 import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
 import org.firstinspires.ftc.teamcode.components.MecanumDrive;
-import org.firstinspires.ftc.teamcode.components.MecanumDriveFE;
-import org.firstinspires.ftc.teamcode.util.Values;
+import org.firstinspires.ftc.teamcode.components.Values;
 
 @TeleOp(group = "Actual", name = "MainOpMode")
 public class MainOpMode extends OpMode {

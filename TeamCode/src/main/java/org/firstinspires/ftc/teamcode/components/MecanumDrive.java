@@ -5,8 +5,6 @@ import static com.qualcomm.robotcore.hardware.DcMotor.ZeroPowerBehavior.BRAKE;
 import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 
-import org.firstinspires.ftc.teamcode.util.Values;
-
 public class MecanumDrive {
 
     public DcMotor FR, FL, BR, BL;

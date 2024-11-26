@@ -1,16 +1,12 @@
 package org.firstinspires.ftc.teamcode.components;
 
 import com.acmerobotics.dashboard.config.Config;
-import com.arcrobotics.ftclib.controller.PIDController;
-import com.qualcomm.robotcore.hardware.DcMotor;
 import com.qualcomm.robotcore.hardware.Gamepad;
 import com.qualcomm.robotcore.hardware.Servo;
-import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
-import org.firstinspires.ftc.teamcode.util.Values;
 
-//@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 public class ClawControl {
 
     public Servo WRIST_L, WRIST_R, ROTATE, PINCH;
@@ -20,7 +16,7 @@ public class ClawControl {
     public boolean clawClosed = true;
     public boolean pClaw = false;
 
-    public double wristTarget = 0, rotateTarget = Values.ROTATE_INIT; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static double wristTarget = Values.WRIST_MAX, rotateTarget = Values.ROTATE_INIT; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
     public double wristPosition = 0;
 
     // Constructor to initialize the motors and gamepad
@@ -72,7 +68,7 @@ public class ClawControl {
             }
         }
 
-        if (gamepad2.left_stick_y > 0 && slidesPosition > 50) {
+        if (gamepad2.left_stick_y > 0) {
             double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
             double newWristPos = wristPosition + wristIncr;
             if(newWristPos > Values.WRIST_MAX) {
@@ -80,7 +76,7 @@ public class ClawControl {
             } else {
                 wristTarget = newWristPos;
             }
-        } else if (gamepad2.left_stick_y < 0 && slidesPosition > 50) {
+        } else if (gamepad2.left_stick_y < 0) {
             double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
             double newWristPos = wristPosition + wristIncr;
             if(newWristPos < Values.WRIST_MIN) {

@@ -1,14 +1,12 @@
 package org.firstinspires.ftc.teamcode.teleop.debugging;
 
 import com.acmerobotics.dashboard.FtcDashboard;
-import com.acmerobotics.dashboard.config.Config;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 
 import org.firstinspires.ftc.teamcode.components.ClawControl;
 import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
-import org.firstinspires.ftc.teamcode.util.Values;
 
 import com.qualcomm.robotcore.hardware.Servo;
 
