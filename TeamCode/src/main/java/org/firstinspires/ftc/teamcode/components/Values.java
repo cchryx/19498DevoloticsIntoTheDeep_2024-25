@@ -39,10 +39,11 @@ public class Values {
     public static double WRIST_WALL_UP = 0.65;
 
 
-    public static double ROTATE_INIT = 0.5; // 0 deg
+    public static double ROTATE_INIT = 0; // 0 deg
     public static double ROTATE_L_MAX = 0; // 90 deg
     public static double ROTATE_R_MAX = 1;
     public static double ROTATE_INCR = 0.03;
-    public static double PINCH_MIN = 0; // Claw close
+
+    public static double PINCH_MIN = 0.05; // Claw close
     public static double PINCH_MAX = 0.3; // Claw open
 }

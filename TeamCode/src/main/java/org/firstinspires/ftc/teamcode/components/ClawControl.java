@@ -50,23 +50,33 @@ public class ClawControl {
     }
 
     public void move(double slidesPosition) {
-        if (gamepad2.left_stick_x > 0 && slidesPosition > 50) {
-            double rotateIncr = Values.ROTATE_INCR * gamepad2.left_stick_x;
-            double newRotatePos = ROTATE.getPosition() + rotateIncr;
-            if(newRotatePos > Values.ROTATE_R_MAX) {
-                rotateTarget = Values.ROTATE_R_MAX;
-            } else {
-                rotateTarget += rotateIncr;
-            }
-        } else if (gamepad2.left_stick_x < 0 && slidesPosition > 50) {
-            double rotateIncr = Values.ROTATE_INCR * gamepad2.left_stick_x;
-            double newRotatePos = ROTATE.getPosition() + rotateIncr;
-            if(newRotatePos < Values.ROTATE_L_MAX) {
-                rotateTarget = Values.ROTATE_L_MAX;
-            } else {
-                rotateTarget += rotateIncr;
-            }
+
+        rotateTarget = Math.min(1, Math.max(0, rotateTarget));
+
+        if (slidesPosition < 50) {
+            rotateTarget = Values.ROTATE_INIT;
+        } else {
+            rotateTarget += gamepad2.left_stick_x/100;
         }
+
+
+//        if (gamepad2.left_stick_x > 0 && slidesPosition > 50) {
+//            double rotateIncr = Values.ROTATE_INCR * gamepad2.left_stick_x;
+//            double newRotatePos = ROTATE.getPosition() + rotateIncr;
+//            rotateTarget += rotateIncr;
+//
+////
+//        } else if (gamepad2.left_stick_x < 0 && slidesPosition > 50) {
+//            double rotateIncr = Values.ROTATE_INCR * gamepad2.left_stick_x;
+//            double newRotatePos = ROTATE.getPosition() + rotateIncr;
+//            rotateTarget += rotateIncr;
+//
+////            if(newRotatePos < Values.ROTATE_L_MAX) {
+////                rotateTarget = Values.ROTATE_L_MAX;
+////            } else {
+////                rotateTarget += rotateIncr;
+////            }
+//        }
 
         if (gamepad2.left_stick_y > 0) {
             double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
