@@ -136,6 +136,7 @@ public class MainOpModeFE extends OpMode {
         switch (autoProcess) {
             case "none":
                 claw.wristTarget = Values.WRIST_HOME;
+                break;
             case "home":
                 switch (autoStep) {
                     case 1:
@@ -217,7 +218,7 @@ public class MainOpModeFE extends OpMode {
                         if(submersible && !pSubmersible && autoTime.milliseconds() > 100) {
                             claw.clawClosed = true;
                             claw.rotateTarget = Values.ROTATE_INIT;
-                            claw.wristTarget = Values.WRIST_MAX;
+                            claw.wristTarget = Values.WRIST_SUB;
                             autoTime.reset();
                             autoStep = 20001;
                         }
@@ -308,6 +309,7 @@ public class MainOpModeFE extends OpMode {
                 switch (autoStep) {
                     case 1:
                         if(rung && !pRung && autoTime.milliseconds() > 100) {
+                            arm.aMinSpeed = -0.3;
                             arm.armTarget = Values.ARM_HRUNG;
                             claw.wristTarget = Values.WRIST_HRUNG;
                             autoTime.reset();

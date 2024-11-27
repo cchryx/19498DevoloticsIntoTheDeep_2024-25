@@ -125,11 +125,6 @@ public class ArmControl {
         }
 
         // Manual Positioning Arm
-
-        if (Math.abs(armTarget - armPosition) > 100) {
-            armTarget = armPosition;
-        }
-
         if (gamepad2.right_trigger > 0) {
             if(armPosition + Values.ARM_INCR > Values.ARM_MAX) {
                 armTarget = Values.ARM_MAX;

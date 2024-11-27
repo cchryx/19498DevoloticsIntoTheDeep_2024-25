@@ -23,20 +23,21 @@ public class Values {
     public static int ARM_HOME = 70;
     public static int ARM_INCR = 2;
     public static int ARM_SUB = 85;
-    public static int ARM_HBASKET = 650;
+    public static int ARM_HBASKET = 600;
     public static int ARM_HRUNG = 600;
-    public static int ARM_WALL = 125;
+    public static int ARM_WALL = 120;
 
     // CLAW VALUES
     public static double WRIST_HOME = 0.03;
     public static double WRIST_MIN = 0;
     public static double WRIST_MED = 0.4;
     public static double WRIST_MAX = 0.96;
+    public static double WRIST_SUB = 0.65;
     public static double WRIST_OFFSET = 0.03;
     public static double WRIST_INCR = -0.03;
     public static double WRIST_HRUNG = 0.9;
     public static double WRIST_HRUNG_S = 0.7;
-    public static double WRIST_WALL = 0.5;
+    public static double WRIST_WALL = 0.45;
     public static double WRIST_WALL_UP = 0.65;
 
 
@@ -45,7 +46,7 @@ public class Values {
     public static double ROTATE_R_MAX = 1;
     public static double ROTATE_INCR = 0.03;
 
-    public static double PINCH_MIN = 0.05; // Claw close
+    public static double PINCH_MIN = 0; // Claw close
     public static double PINCH_MAX = 0.3; // Claw open
 
 
