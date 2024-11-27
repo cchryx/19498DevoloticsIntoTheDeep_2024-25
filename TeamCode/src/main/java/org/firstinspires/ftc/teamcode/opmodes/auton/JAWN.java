@@ -3,6 +3,7 @@ package org.firstinspires.ftc.teamcode.opmodes.auton;
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
+import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
@@ -41,6 +42,7 @@ public class JAWN extends OpMode {
 
     // Autonomous
     Pose2d START_POSE = new Pose2d(14, -57, Math.toRadians(90));
+    TrajectoryActionBuilder tab1 = null;
 
     // Init Positions
     public final int  PINCHSERVO = 0, WRISTSERVO = 1, ROTATESERVO = 2;
@@ -57,6 +59,7 @@ public class JAWN extends OpMode {
 
     public int rPos = 0;
     public int wPos = 0;
+    public int status = 0;
 
     @Override
     public void init() {
@@ -91,8 +94,9 @@ public class JAWN extends OpMode {
         // Starting position
         drive = new MecanumDrive(hardwareMap, START_POSE);
 
-        TrajectoryActionBuilder tab1 = drive.actionBuilder(START_POSE)
-                .lineToX(10);
+        tab1 = drive.actionBuilder(START_POSE)
+                .lineToY(-50);
+
 
         // Build Autonomous Program
         buildProgram();
@@ -142,12 +146,16 @@ public class JAWN extends OpMode {
 //                    followTraj(trajNo)
                     switch (arg1) {
                         case 1:
+                            status = 1;
                             Actions.runBlocking(
-                                    drive.actionBuilder(START_POSE)
-                                            .lineToY(-47.5)
-                                            .build()
+                                    new SequentialAction(
+                                            tab1.build()
+                                    )
                             );
+
+                            status = 2;
                             break;
+
                         case 2:
                             break;
                     }
@@ -184,6 +192,7 @@ public class JAWN extends OpMode {
 
         // TELEMETRY
         telemetry.addData("Line", line);
+        telemetry.addData("Status", status);
         telemetry.update();
     }
 
@@ -212,12 +221,14 @@ public class JAWN extends OpMode {
     }
 
     public void buildProgram() {
+//        followTraj(1);
 
-        followTraj(1);
-        waitTime(5000);
-        setSlidesTarget(100);
-        waitTime(200);
+//        waitTime(5000);
         setPivotTarget(100);
+        waitTime(200);
+        setSlidesTarget(100);
+
+
 
 
 
