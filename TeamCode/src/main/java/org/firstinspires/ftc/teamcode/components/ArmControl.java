@@ -9,7 +9,7 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+//@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 public class ArmControl {
 
     private final double SLOWDOWN_FACTOR = 0.5;
@@ -125,6 +125,11 @@ public class ArmControl {
         }
 
         // Manual Positioning Arm
+
+        if (Math.abs(armTarget - armPosition) > 100) {
+            armTarget = armPosition;
+        }
+
         if (gamepad2.right_trigger > 0) {
             if(armPosition + Values.ARM_INCR > Values.ARM_MAX) {
                 armTarget = Values.ARM_MAX;

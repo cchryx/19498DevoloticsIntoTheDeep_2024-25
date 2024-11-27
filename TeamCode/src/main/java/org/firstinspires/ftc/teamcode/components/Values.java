@@ -15,6 +15,7 @@ public class Values {
     public static int SLIDES_HBASKET = 740;
     public static int SLIDES_WALL = 50;
     public static int SLIDES_INCR = 5;
+    public static int SLIDES_DROPOFF = 300; // Claw open
 
     // ARM VALUES
     public static int ARM_MAX = 650;
@@ -46,4 +47,6 @@ public class Values {
 
     public static double PINCH_MIN = 0.05; // Claw close
     public static double PINCH_MAX = 0.3; // Claw open
+
+
 }

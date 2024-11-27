@@ -1,27 +1,25 @@
-package org.firstinspires.ftc.teamcode.teleop.opmodes;
+package org.firstinspires.ftc.teamcode.opmodes.teleop;
 
 import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
-import com.qualcomm.hardware.rev.RevHubOrientationOnRobot;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
 import com.qualcomm.robotcore.eventloop.opmode.TeleOp;
 import com.qualcomm.robotcore.hardware.DcMotor;
-import com.qualcomm.robotcore.hardware.IMU;
 import com.qualcomm.robotcore.hardware.Servo;
 import com.qualcomm.robotcore.util.ElapsedTime;
 
 import org.firstinspires.ftc.teamcode.components.ArmControl;
 import org.firstinspires.ftc.teamcode.components.ClawControl;
 import org.firstinspires.ftc.teamcode.components.HardwareInitializer;
-import org.firstinspires.ftc.teamcode.components.MecanumDriveFE;
+import org.firstinspires.ftc.teamcode.components.MecanumDrive;
 import org.firstinspires.ftc.teamcode.components.Values;
 
-@TeleOp(group = "Actual", name = "MainOpModeFE")
-public class MainOpModeFE extends OpMode {
+@TeleOp(group = "Teleop", name = "MainOpMode")
+public class MainOpMode extends OpMode {
     private HardwareInitializer hardwareInitializer;
     private ArmControl arm;
     private ClawControl claw;
-    private MecanumDriveFE mecanumDrive;
+    private MecanumDrive mecanumDrive;
 
     // Initialize hardware
     DcMotor SLIDES_F;
@@ -35,7 +33,6 @@ public class MainOpModeFE extends OpMode {
     DcMotor FL;
     DcMotor BR;
     DcMotor BL;
-    IMU imu;
 
     private ElapsedTime autoTime = new ElapsedTime();
     private String autoProcess = "none";
@@ -65,17 +62,9 @@ public class MainOpModeFE extends OpMode {
         FL = hardwareInitializer.getMotor("FL");
         BR = hardwareInitializer.getMotor("BR");
         BL = hardwareInitializer.getMotor("BL");
-        imu = hardwareMap.get(IMU.class, "imu");
-
-        // Set the IMU parameters
-        IMU.Parameters parameters = new IMU.Parameters(new RevHubOrientationOnRobot(
-                RevHubOrientationOnRobot.LogoFacingDirection.RIGHT,
-                RevHubOrientationOnRobot.UsbFacingDirection.BACKWARD));
-        imu.initialize(parameters);
-        imu.resetYaw();
 
         // Create a new MecanumDriveFE object
-        mecanumDrive = new MecanumDriveFE(FR, FL, BR, BL, imu, gamepad1);
+        mecanumDrive = new MecanumDrive(FR, FL, BR, BL, gamepad1);
         claw = new ClawControl(WRIST_L, WRIST_R, ROTATE, PINCH, gamepad1, gamepad2, telemetry);
         arm = new ArmControl(SLIDES_F, SLIDES_B, ARM, gamepad1, gamepad2, telemetry);
         claw.init();
@@ -133,6 +122,7 @@ public class MainOpModeFE extends OpMode {
                     case 1:
                         if(home && !pHome && autoTime.milliseconds() > 100) {
                             arm.aMinSpeed = -0.8;
+                            arm.sMinSpeed = -1;
                             claw.rotateTarget = Values.ROTATE_INIT;
                             claw.wristTarget = Values.WRIST_HOME;
                             claw.clawClosed = true;
@@ -170,7 +160,7 @@ public class MainOpModeFE extends OpMode {
                         if(autoTime.milliseconds() > 500) {
                             arm.aMinSpeed = -0.5;
                             if(arm.armPosition < 500) {
-                                arm.aMinSpeed = -0.08;
+                                arm.aMinSpeed = 0.08;
                             }
                             arm.armTarget = 70;
                             autoTime.reset();
@@ -185,20 +175,15 @@ public class MainOpModeFE extends OpMode {
                     case 1:
                         if(submersible && !pSubmersible && autoTime.milliseconds() > 100) {
                             arm.aMinSpeed = -0.8;
+                            arm.sMinSpeed = -1;
                             claw.clawClosed = false;
-                            arm.armTarget = Values.ARM_SUB;
+                            claw.wristTarget = Values.WRIST_HOME;
+                            arm.armTarget = 70;
                             autoTime.reset();
                             autoStep = 10001;
                         }
                         break;
                     case 10001:
-                        if(autoTime.milliseconds() > 100) {
-                            claw.wristTarget = Values.WRIST_HOME;
-                        autoTime.reset();
-                        autoStep += 1;
-                        }
-                        break;
-                    case 10002:
                         if (autoTime.milliseconds() > 200) {
                             arm.slidesTarget = Values.SLIDES_SUB;
                             autoTime.reset();
@@ -222,7 +207,7 @@ public class MainOpModeFE extends OpMode {
                         }
                         break;
                     case 3:
-                        if(autoTime.milliseconds() > 1000) {
+                        if(submersible && !pSubmersible && autoTime.milliseconds() > 100) {
                             autoTime.reset();
                             autoStep = 1000101;
                             autoProcess = "home";
@@ -234,9 +219,9 @@ public class MainOpModeFE extends OpMode {
                 switch (autoStep) {
                     case 1:
                         if(basket && !pBasket && autoTime.milliseconds() > 100) {
-                            arm.aMinSpeed = -0.3;
+                            arm.aMinSpeed = -0.6;
+                            arm.sMinSpeed = -0.6;
                             arm.armTarget = Values.ARM_HBASKET;
-                            claw.wristPosition = Values.WRIST_HOME;
                             autoTime.reset();
                             autoStep += 1;
                         }
@@ -264,34 +249,12 @@ public class MainOpModeFE extends OpMode {
                         }
                         break;
                     case 40001:
-                        if(autoTime.milliseconds() > 100) {
-                            claw.wristTarget = Values.WRIST_MED;
-                            autoTime.reset();
-                            autoStep += 1;
-                        }
-                        break;
-                    case 40002:
-                        if(autoTime.milliseconds() > 400) {
-                            arm.sMinSpeed = -0.6;
-                            arm.slidesTarget = Values.SLIDES_HOME;
+                        if(autoTime.milliseconds() > 300) {
                             claw.rotateTarget = Values.ROTATE_INIT;
-                            autoStep += 1;
-                            autoTime.reset();
-                        }
-                        break;
-                    case 40003:
-                        if (autoTime.milliseconds() > 500) {
-                            arm.armTarget = Values.ARM_HOME;
-                            claw.wristTarget = Values.WRIST_MAX;
-                            autoStep += 1;
-                            autoTime.reset();
-                        }
-                        break;
-                    case 40004:
-                        if (autoTime.milliseconds() > 500) {
                             claw.wristTarget = Values.WRIST_HOME;
-                            autoStep = 1;
-                            autoProcess = "none";
+                            autoTime.reset();
+                            autoStep = 1000101;
+                            autoProcess = "home";
                         }
                         break;
                 }
@@ -300,6 +263,8 @@ public class MainOpModeFE extends OpMode {
                 switch (autoStep) {
                     case 1:
                         if(rung && !pRung && autoTime.milliseconds() > 100) {
+                            arm.aMinSpeed = -0.6;
+                            arm.sMinSpeed = -0.6;
                             arm.armTarget = Values.ARM_HRUNG;
                             claw.wristTarget = Values.WRIST_HRUNG;
                             autoTime.reset();
@@ -341,6 +306,7 @@ public class MainOpModeFE extends OpMode {
                 switch (autoStep) {
                     case 1:
                         if (observation && !pObservation && autoTime.milliseconds() > 100) {
+                            arm.sMinSpeed = -0.6;
                             claw.clawClosed = false;
                             arm.armTarget = Values.ARM_WALL;
                             arm.slidesTarget = Values.SLIDES_WALL;
@@ -398,8 +364,6 @@ public class MainOpModeFE extends OpMode {
 
         telemetry.addData("AutoProcess", autoProcess);
         telemetry.addData("AutoStep", autoStep);
-        double heading = mecanumDrive.getHeading();
-        telemetry.addData("Heading (Degrees)", heading);
 
         arm.telemetry();
         claw.telemetry();
