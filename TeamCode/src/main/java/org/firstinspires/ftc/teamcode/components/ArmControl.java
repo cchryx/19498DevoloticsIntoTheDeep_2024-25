@@ -9,18 +9,17 @@ import com.qualcomm.robotcore.hardware.Gamepad;
 
 import org.firstinspires.ftc.robotcore.external.Telemetry;
 
-//@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
+@Config // TODO: COMMENT OUT AFTER TUNING (http://192.168.43.1:8080/dash)
 public class ArmControl {
 
-    private final double SLOWDOWN_FACTOR = 0.5;
     private DcMotor SLIDES_F, SLIDES_B, ARM;
     private Gamepad gamepad1, gamepad2;
     Telemetry telemetry;
     public PIDController slidesController, armController;
-    public double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public double aP = 0.026, aI = 0, aD = 0.00065, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public int slidesTarget = 0, armTarget = Values.ARM_HOME; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
-    public int slidesPosition = 0, armPosition = Values.ARM_HOME;
+    public static double sP = 0.01088, sI = 0.01088, sD = 0.00006, sF = 0; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static double aP = 0.026, aI = 0, aD = 0.00065, aF = 0.021; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public static int slidesTarget = 0, armTarget = Values.ARM_HOME; // TODO: RM STATIC AFTER TUNING (http://192.168.43.1:8080/dash)
+    public int slidesPosition = 0, armPosition = 0;
     public double motorPowerSlides, motorPowerArm;
     public double slidesPID, armPID;
 
@@ -65,7 +64,7 @@ public class ArmControl {
         armController = new PIDController(aP_T, aI_T, aD_T);
     }
 
-    public void move() {
+    public void move(String state) {
         //////////
         // PIDs //
         //////////
@@ -99,45 +98,48 @@ public class ArmControl {
         // CONTROLLER INPUTS //
         ///////////////////////
 
-        // Manual Positioning Slides
-        if (gamepad1.right_bumper) {
-            if(slidesTarget + Values.SLIDES_INCR > Values.SLIDES_MAX_EXTEND) {
+        if(state == "teleop") {
+            // Manual Positioning Slides
+            if (gamepad1.right_bumper) {
+                if(slidesTarget + Values.SLIDES_INCR > Values.SLIDES_MAX_EXTEND) {
+                    slidesTarget = Values.SLIDES_MAX_EXTEND;
+                } else {
+                    slidesTarget += Values.SLIDES_INCR;
+                }
+            } else if (gamepad1.left_bumper) {
+                if(slidesTarget - Values.SLIDES_INCR < Values.SLIDES_HOME) {
+                    slidesTarget = Values.SLIDES_HOME;
+                } else {
+                    slidesTarget -= Values.SLIDES_INCR;
+                }
+            }
+
+            // Slides Target Min/Max
+            slidesTarget = Math.min(slidesTarget, Math.max(-Values.SLIDES_INCR, slidesTarget));
+
+            // Reset Positioning
+            if(gamepad1.dpad_up) {
                 slidesTarget = Values.SLIDES_MAX_EXTEND;
-            } else {
-                slidesTarget += Values.SLIDES_INCR;
-            }
-        } else if (gamepad1.left_bumper) {
-            if(slidesTarget - Values.SLIDES_INCR < Values.SLIDES_HOME) {
+            } else if (gamepad1.dpad_down) {
                 slidesTarget = Values.SLIDES_HOME;
-            } else {
-                slidesTarget -= Values.SLIDES_INCR;
+            }
+
+            // Manual Positioning Arm
+            if (gamepad2.right_trigger > 0) {
+                if(armPosition + Values.ARM_INCR > Values.ARM_MAX) {
+                    armTarget = Values.ARM_MAX;
+                } else {
+                    armTarget += Values.ARM_INCR * gamepad2.right_trigger;
+                }
+            } else if (gamepad2.left_trigger > 0) {
+                if(armPosition - Values.ARM_INCR < Values.ARM_MIN) {
+                    armTarget = Values.ARM_MIN;
+                } else {
+                    armTarget -= Values.ARM_INCR * gamepad2.left_trigger;
+                }
             }
         }
 
-        // Slides Target Min/Max
-        slidesTarget = Math.min(slidesTarget, Math.max(-Values.SLIDES_INCR, slidesTarget));
-
-        // Reset Positioning
-        if(gamepad1.dpad_up) {
-            slidesTarget = Values.SLIDES_MAX_EXTEND;
-        } else if (gamepad1.dpad_down) {
-            slidesTarget = Values.SLIDES_HOME;
-        }
-
-        // Manual Positioning Arm
-        if (gamepad2.right_trigger > 0) {
-            if(armPosition + Values.ARM_INCR > Values.ARM_MAX) {
-                armTarget = Values.ARM_MAX;
-            } else {
-                armTarget += Values.ARM_INCR * gamepad2.right_trigger;
-            }
-        } else if (gamepad2.left_trigger > 0) {
-            if(armPosition - Values.ARM_INCR < Values.ARM_MIN) {
-                armTarget = Values.ARM_MIN;
-            } else {
-                armTarget -= Values.ARM_INCR * gamepad2.left_trigger;
-            }
-        }
 
     }
 
@@ -146,5 +148,8 @@ public class ArmControl {
         telemetry.addData("slidesPosition", slidesPosition);
         telemetry.addData("armTarget", armTarget);
         telemetry.addData("armPosition", armPosition);
+        telemetry.addData("armMinSpeed", aMinSpeed);
+        telemetry.addData("slidesMinSpeed", sMinSpeed);
+
     }
 }

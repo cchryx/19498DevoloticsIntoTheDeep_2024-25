@@ -49,47 +49,49 @@ public class ClawControl {
         PINCH.setPosition(Values.PINCH_MIN);
     }
 
-    public void move(double slidesPosition) {
+    public void move(double slidesPosition, String state) {
         rotateTarget = Math.min(1, Math.max(0, rotateTarget));
 
-        if (slidesPosition < 50) {
-            rotateTarget = Values.ROTATE_INIT;
-        } else {
-            rotateTarget += gamepad2.left_stick_x / 50;
-        }
-
-
-        if (gamepad2.left_stick_y > 0) {
-            double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
-            double newWristPos = wristPosition + wristIncr;
-            if(newWristPos > Values.WRIST_MAX) {
-                wristTarget = Values.WRIST_MAX;
+        if(state == "teleop") {
+            if (slidesPosition < 50) {
+                rotateTarget = Values.ROTATE_INIT;
             } else {
-                wristTarget = newWristPos;
+                rotateTarget += gamepad2.left_stick_x / 50;
             }
-        } else if (gamepad2.left_stick_y < 0) {
-            double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
-            double newWristPos = wristPosition + wristIncr;
-            if(newWristPos < Values.WRIST_MIN) {
-                wristTarget = Values.WRIST_MIN;
-            } else {
-                wristTarget = newWristPos;
+
+
+            if (gamepad2.left_stick_y > 0) {
+                double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
+                double newWristPos = wristPosition + wristIncr;
+                if(newWristPos > Values.WRIST_MAX) {
+                    wristTarget = Values.WRIST_MAX;
+                } else {
+                    wristTarget = newWristPos;
+                }
+            } else if (gamepad2.left_stick_y < 0) {
+                double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
+                double newWristPos = wristPosition + wristIncr;
+                if(newWristPos < Values.WRIST_MIN) {
+                    wristTarget = Values.WRIST_MIN;
+                } else {
+                    wristTarget = newWristPos;
+                }
             }
-        }
 
-        if (gamepad2.dpad_left && slidesPosition > 50) {
-            rotateTarget = Values.ROTATE_L_MAX;
-        } else if (gamepad2.dpad_right && slidesPosition > 50) {
-            rotateTarget = Values.ROTATE_R_MAX;
-        } else if (gamepad2.dpad_up) {
-            rotateTarget = Values.ROTATE_INIT;
-        }
+            if (gamepad2.dpad_left && slidesPosition > 50) {
+                rotateTarget = Values.ROTATE_L_MAX;
+            } else if (gamepad2.dpad_right && slidesPosition > 50) {
+                rotateTarget = Values.ROTATE_R_MAX;
+            } else if (gamepad2.dpad_up) {
+                rotateTarget = Values.ROTATE_INIT;
+            }
 
-        boolean claw = gamepad2.x;
-        if(!pClaw && claw) {
-            clawClosed = !clawClosed;
+            boolean claw = gamepad2.x;
+            if(!pClaw && claw) {
+                clawClosed = !clawClosed;
+            }
+            pClaw = claw;
         }
-        pClaw = claw;
 
         if (!clawClosed){
             PINCH.setPosition(Values.PINCH_MAX);

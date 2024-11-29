@@ -5,6 +5,7 @@ import com.acmerobotics.dashboard.telemetry.MultipleTelemetry;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
+import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
 import com.qualcomm.robotcore.eventloop.opmode.Autonomous;
 import com.qualcomm.robotcore.eventloop.opmode.OpMode;
@@ -40,26 +41,25 @@ public class JAWN extends OpMode {
     DcMotor BR;
     DcMotor BL;
 
-    // Autonomous
+    // Autonomous Trajectories
     Pose2d START_POSE = new Pose2d(14, -57, Math.toRadians(90));
     TrajectoryActionBuilder tab1 = null;
+    TrajectoryActionBuilder tab2 = null;
+    TrajectoryActionBuilder tab3 = null;
+    TrajectoryActionBuilder tab4 = null;
 
-    // Init Positions
+    // Init positions
     public final int  PINCHSERVO = 0, WRISTSERVO = 1, ROTATESERVO = 2;
 
+    // Program
     public List<int[]> PROGRAM = new ArrayList<>();
-
-    // Miscellaneous
     private ElapsedTime runtime = new ElapsedTime();
     private ElapsedTime totalTime = new ElapsedTime();
     private ElapsedTime timeout = new ElapsedTime();
     public int prevLine = -1;
     public int line = 0;
-
-
     public int rPos = 0;
     public int wPos = 0;
-    public int status = 0;
 
     @Override
     public void init() {
@@ -91,28 +91,45 @@ public class JAWN extends OpMode {
     public void start() {
         totalTime.reset();
         telemetry.update();
+
         // Starting position
         drive = new MecanumDrive(hardwareMap, START_POSE);
 
+        // Trajectory action builder
         tab1 = drive.actionBuilder(START_POSE)
-                .lineToY(-50);
+                .strafeToLinearHeading(new Vector2d(28, -42), Math.toRadians(35));
+//                .turnTo(Math.toRadians(-30))
+//                .strafeToLinearHeading(new Vector2d(44, -42), Math.toRadians(35))
+//                .turnTo(Math.toRadians(-32))
+//                .strafeToLinearHeading(new Vector2d(38, -42), Math.toRadians(270))
+//                .setTangent(Math.toRadians(270))
+//                .lineToYConstantHeading(-54)
+//                .strafeToConstantHeading(new Vector2d(-4, -34))
+//                .strafeToLinearHeading(new Vector2d(38, -42), Math.toRadians(270))
+//                .setTangent(Math.toRadians(270))
+//                .lineToYConstantHeading(-54)
+//                .strafeToConstantHeading(new Vector2d(-4, -34))
+//                .strafeToLinearHeading(new Vector2d(38, -42), Math.toRadians(270))
+//                .setTangent(Math.toRadians(270))
+//                .lineToYConstantHeading(-54);
+        tab2 = tab1.fresh()
+                .turnTo(Math.toRadians(-28)).strafeToLinearHeading(new Vector2d(36, -42), Math.toRadians(35));
 
 
-        // Build Autonomous Program
+        // Build autonomous program
         buildProgram();
     }
 
     @Override
     public void loop() {
-        //region PID
-        arm.move();
-        claw.move(arm.slidesPosition);
-
         claw.clawClosed = true;
         claw.wristTarget = wPos;
         claw.rotateTarget = rPos;
 
-        //PROGRAM
+        /////////////
+        // PROGRAM //
+        /////////////
+
         if (line < PROGRAM.size()) {
             int func = PROGRAM.get(line)[0];
             int arg1 = PROGRAM.get(line)[1];
@@ -146,18 +163,11 @@ public class JAWN extends OpMode {
 //                    followTraj(trajNo)
                     switch (arg1) {
                         case 1:
-                            status = 1;
-                            Actions.runBlocking(
-                                    new SequentialAction(
-                                            tab1.build()
-                                    )
-                            );
-
-                            status = 2;
+                            Actions.runBlocking(tab1.build());
                             break;
-
-                        case 2:
-                            break;
+//                        case 2:
+//                            Actions.runBlocking(tab2.build());
+//                            break;
                     }
                     CHANGE_LINE = true;
                     break;
@@ -188,49 +198,34 @@ public class JAWN extends OpMode {
             }
         }
 
-//        drive.update();
 
-        // TELEMETRY
-        telemetry.addData("Line", line);
-        telemetry.addData("Status", status);
-        telemetry.update();
+
     }
 
-    // AUTONOMOUS FUNCTIONS:
+    //////////////////////////
+    // AUTONOMOUS FUNCTIONS //
+    //////////////////////////
 
-    // Hardware Functions
-    public void setServoPos(int servo, int target1k) {
-        PROGRAM.add(new int[] {1, servo, target1k, 0});
-    }
-
+    // Hardware functions
     public void setSlidesTarget(int position) {
         PROGRAM.add(new int[] {20, position, 0, 0});
     }
-    public void setPivotTarget(int position) {
+    public void setArmTarget(int position) {
         PROGRAM.add(new int[] {21, position, 0, 0});
     }
 
-    // Trajectory Functions
+    // Trajectory functions
     public void followTraj(int trajNo) {
         PROGRAM.add(new int[] {3, trajNo, 0, 0});
     }
 
-    // Wait Functions
+    // Wait functions
     public void waitTime(int ms) {
         PROGRAM.add(new int[] {5, ms, 0, 0});
     }
 
+    // Build autonomous program
     public void buildProgram() {
-//        followTraj(1);
-
-//        waitTime(5000);
-        setPivotTarget(100);
-        waitTime(200);
-        setSlidesTarget(100);
-
-
-
-
-
+        followTraj(1);
     }
 }

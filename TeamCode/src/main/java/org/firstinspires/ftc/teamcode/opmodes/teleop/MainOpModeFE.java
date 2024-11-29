@@ -90,8 +90,8 @@ public class MainOpModeFE extends OpMode {
     @Override
     public void loop() {
         mecanumDrive.move();
-        arm.move();
-        claw.move(arm.slidesPosition);
+        arm.move("teleop");
+        claw.move(arm.slidesPosition, "teleop");
 
 
         // Auto Stuff
@@ -432,20 +432,20 @@ public class MainOpModeFE extends OpMode {
                     case 1:
                         if (dropoff && !pDropoff && autoTime.milliseconds() > 100) {
                             arm.slidesTarget = Values.SLIDES_DROPOFF;
+                            claw.wristTarget = Values.WRIST_MED;
                             autoTime.reset();
                             autoStep += 1;
                         }
                         break;
                     case 2:
-                        if (dropoff && !pDropoff && autoTime.milliseconds() > 100) {
+                        if (dropoff && !pDropoff) {
                             claw.clawClosed = false;
                             autoTime.reset();
                             autoStep = 20001;
                         }
                         break;
                     case 20001:
-                        if (autoTime.milliseconds() > 500) {
-                            claw.clawClosed = false;
+                        if (autoTime.milliseconds() > 200) {
                             claw.wristTarget = Values.WRIST_HOME;
                             autoTime.reset();
                             autoStep = 1000101;

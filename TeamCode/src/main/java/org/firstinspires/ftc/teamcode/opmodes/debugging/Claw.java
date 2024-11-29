@@ -45,7 +45,7 @@ public class Claw extends OpMode {
 
     @Override
     public void loop() {
-//        claw.move();
+//        claw.move("teleop");
         claw.telemetry();
     }
 }

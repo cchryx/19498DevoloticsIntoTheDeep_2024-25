@@ -79,8 +79,8 @@ public class MainOpMode extends OpMode {
     @Override
     public void loop() {
         mecanumDrive.move();
-        arm.move();
-        claw.move(arm.slidesPosition);
+        arm.move("teleop");
+        claw.move(arm.slidesPosition, "teleop");
 
 
         // Auto Stuff
@@ -266,13 +266,19 @@ public class MainOpMode extends OpMode {
                             arm.aMinSpeed = -0.6;
                             arm.sMinSpeed = -0.6;
                             arm.armTarget = Values.ARM_HRUNG;
-                            claw.wristTarget = Values.WRIST_HRUNG;
                             autoTime.reset();
                             autoStep = 10001;
                         }
                         break;
                     case 10001:
-                        if(autoTime.milliseconds() > 500) {
+                        if(autoTime.milliseconds() > 100) {
+                            claw.wristTarget = Values.WRIST_HRUNG;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 10002:
+                        if(autoTime.milliseconds() > 100) {
                             arm.slidesTarget = Values.SLIDES_HRUNG;
                             autoTime.reset();
                             autoStep = 2;
