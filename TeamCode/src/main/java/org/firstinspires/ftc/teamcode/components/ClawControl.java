@@ -36,62 +36,60 @@ public class ClawControl {
         this.gamepad1 = gamepad1;
         this.gamepad2 = gamepad2;
         this.telemetry = telemetry;
-
     }
 
     public void init() {
         // Set WRIST_L to reverse direction
         WRIST_R.setDirection(Servo.Direction.REVERSE);
 
-        WRIST_L.setPosition(Values.WRIST_MAX + Values.WRIST_OFFSET);
-        WRIST_R.setPosition(Values.WRIST_MAX);
+        WRIST_L.setPosition(Values.WRIST_MIN + Values.WRIST_OFFSET);
+        WRIST_R.setPosition(Values.WRIST_MIN);
         ROTATE.setPosition(Values.ROTATE_INIT);
         PINCH.setPosition(Values.PINCH_MIN);
     }
 
-    public void move(double slidesPosition, String state) {
+    public void move(double slidesPosition) {
         rotateTarget = Math.min(1, Math.max(0, rotateTarget));
 
-        if(state == "teleop") {
-            if (slidesPosition < 50) {
-                rotateTarget = Values.ROTATE_INIT;
-            } else {
-                rotateTarget += gamepad2.left_stick_x / 50;
-            }
-
-
-            if (gamepad2.left_stick_y > 0) {
-                double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
-                double newWristPos = wristPosition + wristIncr;
-                if(newWristPos > Values.WRIST_MAX) {
-                    wristTarget = Values.WRIST_MAX;
-                } else {
-                    wristTarget = newWristPos;
-                }
-            } else if (gamepad2.left_stick_y < 0) {
-                double wristIncr = Values.WRIST_INCR * gamepad2.left_stick_y;
-                double newWristPos = wristPosition + wristIncr;
-                if(newWristPos < Values.WRIST_MIN) {
-                    wristTarget = Values.WRIST_MIN;
-                } else {
-                    wristTarget = newWristPos;
-                }
-            }
-
-            if (gamepad2.dpad_left && slidesPosition > 50) {
-                rotateTarget = Values.ROTATE_L_MAX;
-            } else if (gamepad2.dpad_right && slidesPosition > 50) {
-                rotateTarget = Values.ROTATE_R_MAX;
-            } else if (gamepad2.dpad_up) {
-                rotateTarget = Values.ROTATE_INIT;
-            }
-
-            boolean claw = gamepad2.x;
-            if(!pClaw && claw) {
-                clawClosed = !clawClosed;
-            }
-            pClaw = claw;
+        if (slidesPosition < 50) {
+            rotateTarget = Values.ROTATE_INIT;
+        } else {
+            rotateTarget += gamepad2.left_stick_x / 50;
         }
+
+
+        if (gamepad2.right_stick_y > 0) {
+            double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
+            double newWristPos = wristPosition + wristIncr;
+            if(newWristPos > Values.WRIST_MAX) {
+                wristTarget = Values.WRIST_MAX;
+            } else {
+                wristTarget = newWristPos;
+            }
+        } else if (gamepad2.right_stick_y < 0) {
+            double wristIncr = Values.WRIST_INCR * gamepad2.right_stick_y;
+            double newWristPos = wristPosition + wristIncr;
+            if(newWristPos < Values.WRIST_MIN) {
+                wristTarget = Values.WRIST_MIN;
+            } else {
+                wristTarget = newWristPos;
+            }
+        }
+
+        if (gamepad2.dpad_left) {
+            rotateTarget = Values.ROTATE_L_MAX;
+        } else if (gamepad2.dpad_right) {
+            rotateTarget = Values.ROTATE_R_MAX;
+        } else if (gamepad2.dpad_up) {
+            rotateTarget = Values.ROTATE_INIT;
+        }
+
+        boolean claw = gamepad2.x;
+        if(!pClaw && claw) {
+            clawClosed = !clawClosed;
+        }
+        pClaw = claw;
+
 
         if (!clawClosed){
             PINCH.setPosition(Values.PINCH_MAX);

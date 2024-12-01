@@ -4,6 +4,7 @@ import com.acmerobotics.dashboard.FtcDashboard;
 import com.acmerobotics.roadrunner.ParallelAction;
 import com.acmerobotics.roadrunner.Pose2d;
 import com.acmerobotics.roadrunner.SequentialAction;
+import com.acmerobotics.roadrunner.SleepAction;
 import com.acmerobotics.roadrunner.TrajectoryActionBuilder;
 import com.acmerobotics.roadrunner.Vector2d;
 import com.acmerobotics.roadrunner.ftc.Actions;
@@ -38,7 +39,7 @@ public class Chamber extends LinearOpMode {
     DcMotor BL;
 
     // Autonomous
-    Pose2d START_POSE = new Pose2d(14, -57, Math.toRadians(90));
+    Pose2d START_POSE = new Pose2d(14, -58, Math.toRadians(90));
 
     @Override
     public void runOpMode() throws InterruptedException {
@@ -70,29 +71,34 @@ public class Chamber extends LinearOpMode {
         drive = new MecanumDrive(hardwareMap, START_POSE);
 
         TrajectoryActionBuilder driveAction1 = drive.actionBuilder(START_POSE)
-                .strafeToConstantHeading(new Vector2d(0, -18));
+                .strafeToConstantHeading(new Vector2d(0, -20));
 
+        TrajectoryActionBuilder driveAction2 = drive.actionBuilder(new Pose2d(0, -20, Math.toRadians(90)))
+                .strafeToConstantHeading(new Vector2d(0, -36));
+//                .strafeToLinearHeading(new Vector2d(20, -33), Math.toRadians(35));
 
-//        TrajectoryActionBuilder driveAction2 = driveAction1.fresh().turnTo(Math.toRadians(-28))
-//                .strafeToLinearHeading(new Vector2d(36, -42), Math.toRadians(35));
-
-        while (opModeInInit()) {}
+        while (opModeInInit()) {
+            arm.initPosition();
+            arm.telemetry();
+        }
 
         Actions.runBlocking(
                 new ParallelAction(
                         new SequentialAction(
                                 new ParallelAction(
-                                        driveAction1.build(),
                                         (p) -> {arm.armTarget = 450; return false;},
                                         (p) -> {arm.slidesTarget = 150; return false;},
-                                        (p) -> {claw.wristTarget = 0.4; return false;}
+                                        (p) -> {claw.wristTarget = 0.4; return false;},
+                                        driveAction1.build()
                                 ),
-                                (p) -> {claw.wristTarget = 0.2; return false;},
-                                (p) -> {arm.armTarget = 400; return false;}
+                                (p) -> {claw.wristTarget = 0; return false;},
+                                new SleepAction(0.5),
+                                (p) -> {claw.clawClosed = false; return false;},
+                                driveAction2.build()
                         ),
                         (p) -> {
-                            arm.move("auton");
-                            claw.move(arm.slidesPosition, "auton");
+                            arm.moveAuton();
+                            claw.move(arm.slidesPosition);
                             return true;
                         }
                 )

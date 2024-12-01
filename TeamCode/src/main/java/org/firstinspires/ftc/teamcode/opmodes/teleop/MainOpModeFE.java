@@ -84,14 +84,21 @@ public class MainOpModeFE extends OpMode {
     }
 
     @Override
+    public void init_loop() {
+        arm.initPosition();
+        arm.telemetry();
+    }
+
+    @Override
     public void start() {
+        claw.wristTarget = Values.WRIST_HOME;
     }
 
     @Override
     public void loop() {
         mecanumDrive.move();
-        arm.move("teleop");
-        claw.move(arm.slidesPosition, "teleop");
+        arm.move();
+        claw.move(arm.slidesPosition);
 
 
         // Auto Stuff
@@ -134,9 +141,6 @@ public class MainOpModeFE extends OpMode {
 
         // Finite State Machine
         switch (autoProcess) {
-            case "none":
-                claw.wristTarget = Values.WRIST_HOME;
-                break;
             case "home":
                 switch (autoStep) {
                     case 1:
@@ -156,7 +160,6 @@ public class MainOpModeFE extends OpMode {
                         claw.clawClosed = true;
                         autoTime.reset();
                         autoStep = 10001;
-
                         break;
                     case 10001:
                         if(autoTime.milliseconds() > 300) {
@@ -175,13 +178,14 @@ public class MainOpModeFE extends OpMode {
                             autoTime.reset();
                             autoStep += 1;
                         }
+                        break;
                     case 10003:
                         if(autoTime.milliseconds() > 500) {
                             arm.aMinSpeed = -0.5;
                             if(arm.armPosition < 500) {
                                 arm.aMinSpeed = -0.08;
                             }
-                            arm.armTarget = 70;
+                            arm.armTarget = Values.ARM_HOME;
                             autoTime.reset();
                             autoStep = 1;
                             autoProcess = "none";
@@ -203,12 +207,12 @@ public class MainOpModeFE extends OpMode {
                     case 10001:
                         if(autoTime.milliseconds() > 100) {
                             claw.wristTarget = Values.WRIST_HOME;
-                        autoTime.reset();
-                        autoStep += 1;
+                            autoTime.reset();
+                            autoStep += 1;
                         }
                         break;
                     case 10002:
-                        if (autoTime.milliseconds() > 200) {
+                        if (autoTime.milliseconds() > 100) {
                             arm.slidesTarget = Values.SLIDES_SUB;
                             autoTime.reset();
                             autoStep = 2;
@@ -217,13 +221,19 @@ public class MainOpModeFE extends OpMode {
                     case 2:
                         if(submersible && !pSubmersible && autoTime.milliseconds() > 100) {
                             claw.clawClosed = true;
-                            claw.rotateTarget = Values.ROTATE_INIT;
-                            claw.wristTarget = Values.WRIST_SUB;
                             autoTime.reset();
                             autoStep = 20001;
                         }
                         break;
                     case 20001:
+                        if(autoTime.milliseconds() > 100) {
+                            claw.rotateTarget = Values.ROTATE_INIT;
+                            claw.wristTarget = Values.WRIST_SUB;
+                            autoTime.reset();
+                            autoStep += 1;
+                        }
+                        break;
+                    case 20002:
                         if(autoTime.milliseconds() > 100) {
                             arm.slidesTarget = Values.SLIDES_HOME;
                             autoTime.reset();
@@ -243,7 +253,7 @@ public class MainOpModeFE extends OpMode {
                 switch (autoStep) {
                     case 1:
                         if(basket && !pBasket && autoTime.milliseconds() > 100) {
-                            arm.aMinSpeed = -0.3;
+                            arm.aMinSpeed = -0.5;
                             arm.armTarget = Values.ARM_HBASKET;
                             claw.wristPosition = Values.WRIST_HOME;
                             autoTime.reset();
@@ -309,15 +319,15 @@ public class MainOpModeFE extends OpMode {
                 switch (autoStep) {
                     case 1:
                         if(rung && !pRung && autoTime.milliseconds() > 100) {
-                            arm.aMinSpeed = -0.3;
+                            arm.aMinSpeed = -0.7;
+                            claw.wristTarget = Values.WRIST_MAX;
                             arm.armTarget = Values.ARM_HRUNG;
-                            claw.wristTarget = Values.WRIST_HRUNG;
                             autoTime.reset();
                             autoStep = 10001;
                         }
                         break;
                     case 10001:
-                        if(autoTime.milliseconds() > 500) {
+                        if(autoTime.milliseconds() > 100) {
                             arm.slidesTarget = Values.SLIDES_HRUNG;
                             autoTime.reset();
                             autoStep = 2;
@@ -353,7 +363,6 @@ public class MainOpModeFE extends OpMode {
                         break;
                     case 40002:
                         if(autoTime.milliseconds() > 400) {
-                            arm.sMinSpeed = -0.6;
                             arm.slidesTarget = Values.SLIDES_HOME;
                             claw.rotateTarget = Values.ROTATE_INIT;
                             autoStep += 1;
@@ -421,8 +430,8 @@ public class MainOpModeFE extends OpMode {
                         if (autoTime.milliseconds() > 300) {
                             claw.wristTarget = Values.WRIST_HOME;
                             autoTime.reset();
-                            autoStep = 1000101;
-                            autoProcess = "home";
+                            autoStep = 1;
+                            autoProcess = "rung";
                         }
                         break;
                 }
@@ -430,7 +439,7 @@ public class MainOpModeFE extends OpMode {
             case "dropoff":
                 switch (autoStep) {
                     case 1:
-                        if (dropoff && !pDropoff && autoTime.milliseconds() > 100) {
+                        if (dropoff && !pDropoff) {
                             arm.slidesTarget = Values.SLIDES_DROPOFF;
                             claw.wristTarget = Values.WRIST_MED;
                             autoTime.reset();
@@ -438,19 +447,25 @@ public class MainOpModeFE extends OpMode {
                         }
                         break;
                     case 2:
-                        if (dropoff && !pDropoff) {
+                        if (dropoff && !pDropoff && autoTime.milliseconds() > 100) {
                             claw.clawClosed = false;
                             autoTime.reset();
-                            autoStep = 20001;
+                            autoStep += 1;
                         }
                         break;
-                    case 20001:
-                        if (autoTime.milliseconds() > 200) {
-                            claw.wristTarget = Values.WRIST_HOME;
+                    case 3:
+                        if (dropoff && !pDropoff && autoTime.milliseconds() > 100) {
+                            arm.slidesTarget = Values.SLIDES_HOME;
                             autoTime.reset();
+                            autoStep = 30001;
+                        }
+                        break;
+                    case 30001:
+                        if(autoTime.milliseconds() > 100) {
                             autoStep = 1000101;
                             autoProcess = "home";
                         }
+                        break;
                 }
                 break;
 

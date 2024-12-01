@@ -42,7 +42,7 @@ public class Arm extends OpMode {
 
     @Override
     public void loop() {
-        arm.move("teleop");
+        arm.move();
         arm.telemetry();
     }
 }
